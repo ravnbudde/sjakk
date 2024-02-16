@@ -22,10 +22,7 @@ void SjakkWindow::drawBoard() {
 
 void SjakkWindow::drawPieces() {
     for(int i = 0; i < pieces.size(); i++){
-        TDT4102::Image a(pieces[i]->getBasePath());
-        if(pieces[i]->isAlive){
-            draw_image(pieces[i]->coordinate, a, 90, 90);
-        }
+        draw_image(pieces[i]->coordinate, pieces[i]->sprite, winW/8, winH/8);
     }
 }
 
@@ -67,6 +64,14 @@ void SjakkWindow::piecesNewSetup() {
     //Dronning
     pieces.push_back(new Queen(3*padX, 0*padY, 0));
     pieces.push_back(new Queen(3*padX, 7*padY, 1));
+
+
+    for(int i = 0; i < pieces.size(); i++){
+        string path = pieces[i]->getBasePath();
+        TDT4102::Image image{path};
+        pieces[i]->sprite = image;
+    }
+
 }
 
 void SjakkWindow::movepiece() {
@@ -76,23 +81,25 @@ void SjakkWindow::movepiece() {
         bool mouseClick = is_left_mouse_button_down();
 
 
-        for(int i = 0; i < 32; i++){
+        for(int i = 0; i < pieces.size(); i++){
             int pcx = pieces[i]->coordinate.x;
             int pcy = pieces[i]->coordinate.y;
-            if(mouseClick and (mouseCord.x > (pcx-5)) and (mouseCord.x < (pcx + padX+5)) and (mouseCord.y > pcy-5) and (mouseCord.y < (pcy + padY+5)) and pieces[i]->isAlive){
+            if(mouseClick and (mouseCord.x > (pcx-5)) and (mouseCord.x < (pcx + padX+5)) and (mouseCord.y > pcy-5) and (mouseCord.y < (pcy + padY+5))){
                 while(!is_right_mouse_button_down()){
                     drawBoard();
                     mouseCord = get_mouse_coordinates();
-                    pieces[i]->coordinate.x = mouseCord.x-50;//(mouseCord.x + 50)/100 * 100;
-                    pieces[i]->coordinate.y = mouseCord.y-50;//(mouseCord.y + 50)/100 * 100;
+                    pieces[i]->coordinate.x = mouseCord.x-(padX/2);//(mouseCord.x + 50)/100 * 100;
+                    pieces[i]->coordinate.y = mouseCord.y-(padX/2);//(mouseCord.y + 50)/100 * 100;
                     next_frame();
                 }
-                pieces[i]->coordinate.x = (pieces[i]->coordinate.x + 50) / 100 * 100;
-                pieces[i]->coordinate.y = (pieces[i]->coordinate.y + 50) / 100 * 100;
+                pieces[i]->coordinate.x = (pieces[i]->coordinate.x + (padX/2)) / (winW/8) * (winW/8);
+                pieces[i]->coordinate.y = (pieces[i]->coordinate.y + (padX/2)) / (winH/8) * (winH/8);
 
-                for(int j = 0; j < 32; j++){
+                for(int j = 0; j < pieces.size(); j++){
                     if((pieces[i]->coordinate.x == pieces[j]->coordinate.x) and (pieces[i]->coordinate.y == pieces[j]->coordinate.y) and (i != j)){
-                        pieces[j]->isAlive = false;
+                        delete pieces[j];
+                        pieces.erase(pieces.begin()+j);
+                        break;
                     }
                 }
 

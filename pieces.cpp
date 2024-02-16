@@ -1,6 +1,6 @@
 #include "headerFiles/pieces.h"
 
-Piece::Piece(int x, int y, int side): coordinate{x, y}, side(side), isAlive(true)
+Piece::Piece(int x, int y, int side): coordinate{x, y}, side(side)
 {}
 
 Piece::~Piece() {}

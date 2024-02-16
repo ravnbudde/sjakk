@@ -13,6 +13,12 @@ int main() {
 
     win.movepiece();
 
+    for(const auto& piece : win.pieces){
+        delete piece;
+    }
+    win.pieces.clear();
+
+
 
     return 0;
 }

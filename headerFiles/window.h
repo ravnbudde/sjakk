@@ -6,11 +6,12 @@
 
 using namespace TDT4102;
 
-constexpr int winH = 800;
-constexpr int winW = 800;
 
-constexpr int padX = winH/8;
-constexpr int padY = winW/8;
+constexpr int winH = 640;
+constexpr int winW = 640;
+
+constexpr int padX = winW/8;
+constexpr int padY = winH/8;
 
 constexpr int map[8][8] = {
     {1, 0, 1, 0, 1, 0, 1, 0},

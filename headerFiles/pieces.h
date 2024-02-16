@@ -15,8 +15,7 @@ class Piece {
 
     TDT4102::Point coordinate; //Lagre koordinatene til hver enkel piece
     int side; //0 om sort, 1 om hvit
-    bool isAlive; //true om lever, false om er tatt
-    
+    TDT4102::Image sprite;
     
 
 };
