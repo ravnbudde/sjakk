@@ -87,8 +87,8 @@ void SjakkWindow::movepiece() {
                     pieces[i]->coordinate.y = mouseCord.y-50;//(mouseCord.y + 50)/100 * 100;
                     next_frame();
                 }
-                pieces[i]->coordinate.x = (pieces[i]->coordinate.x + 20) / 100 * 100;
-                pieces[i]->coordinate.y = (pieces[i]->coordinate.y + 20) / 100 * 100;
+                pieces[i]->coordinate.x = (pieces[i]->coordinate.x + 50) / 100 * 100;
+                pieces[i]->coordinate.y = (pieces[i]->coordinate.y + 50) / 100 * 100;
 
                 for(int j = 0; j < 32; j++){
                     if((pieces[i]->coordinate.x == pieces[j]->coordinate.x) and (pieces[i]->coordinate.y == pieces[j]->coordinate.y) and (i != j)){
