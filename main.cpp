@@ -14,8 +14,8 @@ int main() {
     SjakkWindow win{};
     win.piecesNewSetup();
 
-
     win.movepiece();
+
 
     for(const auto& piece : win.pieces){
         delete piece;

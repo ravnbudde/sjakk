@@ -26,11 +26,10 @@ vector<TDT4102::Point> Pawn::getLegalMoves(int (&map)[8][8]) {
         move.y = coordinate.y + dy*1;
         move.x = coordinate.x;
         moves.push_back(move);
-        if(virginMove and (map[coordinate.x/1][coordinate.y/1 + 2*dy] == 0)){
+        if(virginMove){
             move.y = coordinate.y +2*dy*1;
             move.x = coordinate.x;
             moves.push_back(move);
-            virginMove = false;
         }
     }
 

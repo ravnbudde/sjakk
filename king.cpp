@@ -32,5 +32,11 @@ vector<TDT4102::Point> King::getLegalMoves(int (&map)[8][8]) {
     }
 
     
+    //Castle
+    if(virginMove){
+        
+    }
+
+
     return moves;
 }

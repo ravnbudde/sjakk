@@ -24,16 +24,16 @@ void SjakkWindow::drawBoard() {
     for(int i = 0; i < 8; i++){
         for(int j = 0; j < 8; j++){
             if(((i+j) % 2) == 0){
-                draw_rectangle({i*padX, j*padY}, padX, padY, TDT4102::Color(242,225,195));
+                draw_rectangle({i*padX, j*padY}, padX, padY, TDT4102::Color(250, 0, 250));//TDT4102::Color(242,225,195));
             }
             else{
-                draw_rectangle({i*padX, j*padY}, padX, padY, TDT4102::Color(195,160,130));
+                draw_rectangle({i*padX, j*padY}, padX, padY, TDT4102::Color(150,0,150));//TDT4102::Color(195,160,130));
             }
         }
     }
 }
 
-void SjakkWindow::drawLegalMoves(vector<TDT4102::Point>& legalMoves){
+void SjakkWindow::drawLegalMoves(vector<TDT4102::Point>& legalMoves) {
     for(const auto& move : legalMoves){
         if(((move.x + move.y) % 2) == 0){
             draw_rectangle({move.x*padX, move.y*padY}, padX, padY, TDT4102::Color(249, 240, 123));
@@ -42,6 +42,14 @@ void SjakkWindow::drawLegalMoves(vector<TDT4102::Point>& legalMoves){
             draw_rectangle({move.x*padX, move.y*padY}, padX, padY, TDT4102::Color(226, 207, 89));
         }
     }
+}
+
+void SjakkWindow::drawAroundActivePiece(int cordX, int cordY) {
+    int width = winW/120;
+    draw_rectangle({cordX*padX, cordY*padY}, width, padY, TDT4102::Color::crimson);
+    draw_rectangle({cordX*padX+padX-width, cordY*padY}, width, padY, TDT4102::Color::crimson);
+    draw_rectangle({cordX*padX, cordY*padY}, padX, width, TDT4102::Color::crimson);
+    draw_rectangle({cordX*padX, cordY*padY+padY-width}, padX, width, TDT4102::Color::crimson);
 }
 
 void SjakkWindow::drawPieces() {
@@ -133,7 +141,7 @@ void SjakkWindow::movepiece() {
                 //logikk om brikke er trykket på
                 while(!is_right_mouse_button_down()){
                     drawBoard();
-                    draw_rectangle({pcx*padX, pcy*padY}, padX, padY, TDT4102::Color::transparent, TDT4102::Color::crimson);
+                    drawAroundActivePiece(pcx, pcy); 
                     drawLegalMoves(legalMoves);
                     drawPieces();
                     mouseCord = get_mouse_coordinates();
@@ -149,6 +157,10 @@ void SjakkWindow::movepiece() {
                 for(const auto& move : legalMoves){
                     if(pieces[i]->coordinate.x == move.x and pieces[i]->coordinate.y == move.y){
                         wasMoveLegal = true;
+                        //om det var første trekk er ikke de neste et
+                        if(pieces[i]->virginMove){
+                            pieces[i]->virginMove = false;
+                        }
                         break;
                     }
                 }

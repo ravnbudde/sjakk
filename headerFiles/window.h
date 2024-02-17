@@ -20,21 +20,24 @@ using namespace TDT4102;
 
 class SjakkWindow : public AnimationWindow {
     public:
+    //initialisering
     SjakkWindow();
+    void piecesNewSetup();
+
+    //Visuelt
     void drawBoard();
     void drawLegalMoves(vector<TDT4102::Point>& legalMoves);
     void drawPieces();
-    vector<Piece*> pieces;
-    void piecesNewSetup();
-    
+    void drawAroundActivePiece(int cordX, int cordY );
+
+    //er vel egt mer main loop for nå
     void movepiece();
 
-
+    //promotion
     void promotion(int pieceNr);
 
-
-
-    //Ting til map, for å beregne lovlige trekk osv...
+    //variabler, Ting til map, for å beregne lovlige trekk osv...
+    vector<Piece*> pieces;
     int map[8][8] = {
         {0,0,0,0,0,0,0,0},
         {0,0,0,0,0,0,0,0},
@@ -45,8 +48,7 @@ class SjakkWindow : public AnimationWindow {
         {0,0,0,0,0,0,0,0},
         {0,0,0,0,0,0,0,0}
     };
-
-    void generateMap(int (&map)[8][8]);
+    void generateMap(int (&map)[8][8]);//oppdaterer map
 
     private:
     

@@ -13,13 +13,13 @@ vector<TDT4102::Point> Bishop::getLegalMoves(int (&map)[8][8]) {
     move.y = coordinate.y;
     //Opp til venstre
     while(move.y > -1){
-        move.x -= padX;
-        move.y -= padY;
-        if(map[move.x/padX][move.y/padY]*side < 0){    
+        move.x -= 1;
+        move.y -= 1;
+        if(map[move.x/1][move.y/1]*side < 0){    
             moves.push_back(move);
             break;
         }
-        else if(map[move.x/padX][move.y/padY]*side == 0){    
+        else if(map[move.x][move.y/1]*side == 0){    
             moves.push_back(move);
         }
         else{break;}
@@ -28,13 +28,13 @@ vector<TDT4102::Point> Bishop::getLegalMoves(int (&map)[8][8]) {
     move.x = coordinate.x;
     move.y = coordinate.y;
     while(move.y > -1){
-        move.x += padX;
-        move.y -= padY;
-        if(map[move.x/padX][move.y/padY]*side < 0){    
+        move.x += 1;
+        move.y -= 1;
+        if(map[move.x/1][move.y/1]*side < 0){    
             moves.push_back(move);
             break;
         }
-        else if(map[move.x/padX][move.y/padY]*side == 0){    
+        else if(map[move.x/1][move.y/1]*side == 0){    
             moves.push_back(move);
         }
         else{break;}
@@ -43,14 +43,14 @@ vector<TDT4102::Point> Bishop::getLegalMoves(int (&map)[8][8]) {
     //ned til venstre
     move.x = coordinate.x;
     move.y = coordinate.y;
-    while(move.y < 8*padY + 1){
-        move.x -= padX;
-        move.y += padY;
-        if(map[move.x/padX][move.y/padY]*side < 0){    
+    while(move.y < 8*1 + 1){
+        move.x -= 1;
+        move.y += 1;
+        if(map[move.x/1][move.y/1]*side < 0){    
             moves.push_back(move);
             break;
         }
-        else if(map[move.x/padX][move.y/padY]*side == 0){    
+        else if(map[move.x/1][move.y/1]*side == 0){    
             moves.push_back(move);
         }
         else{break;}
@@ -59,14 +59,14 @@ vector<TDT4102::Point> Bishop::getLegalMoves(int (&map)[8][8]) {
     //ned til høyre
     move.x = coordinate.x;
     move.y = coordinate.y;
-    while(move.y < 8*padY+1){
-        move.x += padX;
-        move.y += padY;
-        if(map[move.x/padX][move.y/padY]*side < 0){    
+    while(move.y < 8*1+1){
+        move.x += 1;
+        move.y += 1;
+        if(map[move.x/1][move.y/1]*side < 0){    
             moves.push_back(move);
             break;
         }
-        else if(map[move.x/padX][move.y/padY]*side == 0){    
+        else if(map[move.x/1][move.y/1]*side == 0){    
             moves.push_back(move);
         }
         else{break;}
