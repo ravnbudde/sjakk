@@ -29,8 +29,15 @@ src = []
 exe = executable(
   'program',
   src,
+'bishop.cpp',
+'gameLogicSupport.cpp',
+'horse.cpp',
+'king.cpp',
 'main.cpp',
+'pawn.cpp',
 'pieces.cpp',
+'queen.cpp',
+'rook.cpp',
 'window.cpp',
   dependencies : [animationwindow_dep, sdl2_dep],
   cpp_args : compiler_flags
