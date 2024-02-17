@@ -10,10 +10,20 @@ constexpr int winW = 800;
 constexpr int padX = winW/8;
 constexpr int padY = winH/8;
 
+const TDT4102::Image whitePawnSprite{"spritePNGs/pawnWhite.png"};
+const TDT4102::Image whiteHorseSprite{"spritePNGs/horseWhite.png"};
+const TDT4102::Image whiteBishopSprite{"spritePNGs/bishopWhite.png"};
+const TDT4102::Image whiteRookSprite{"spritePNGs/rookWhite.png"};
+const TDT4102::Image whiteQueenSprite{"spritePNGs/queenWhite.png"};
+const TDT4102::Image whiteKingSprite{"spritePNGs/kingWhite.png"};
+const TDT4102::Image blackPawnSprite{"spritePNGs/pawnBlack.png"};
+const TDT4102::Image blackHorseSprite{"spritePNGs/horseBlack.png"};
+const TDT4102::Image blackBishopSprite{"spritePNGs/bishopBlack.png"};
+const TDT4102::Image blackRookSprite{"spritePNGs/rookBlack.png"};
+const TDT4102::Image blackQueenSprite{"spritePNGs/queenBlack.png"};
+const TDT4102::Image blackKingSprite{"spritePNGs/kingBlack.png"};
 
 
 
-
-vector<TDT4102::Point> getLegalMoves(Piece *piece, int (&map)[8][8]);
 
 

@@ -7,10 +7,9 @@
 class Queen : public Piece {
     public:
     Queen(int x, int y, int side);
-    string basePath;
-
-    string getBasePath() const override;
+    
     int getPieceType() const override;
+    vector<TDT4102::Point> getLegalMoves(int (&map)[8][8]) override;
 };
 
 

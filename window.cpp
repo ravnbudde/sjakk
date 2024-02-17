@@ -1,5 +1,21 @@
 #include "headerFiles/window.h"
 
+map<int, TDT4102::Image> typeToSprite{
+        {1, whitePawnSprite},
+        {3, whiteHorseSprite},
+        {4, whiteBishopSprite},
+        {5, whiteRookSprite},
+        {9, whiteQueenSprite},
+        {10, whiteKingSprite},
+        {-1, blackPawnSprite},
+        {-3, blackHorseSprite},
+        {-4, blackBishopSprite},
+        {-5, blackRookSprite},
+        {-9, blackQueenSprite},
+        {-10, blackKingSprite}
+    };
+
+
 
 SjakkWindow::SjakkWindow() : AnimationWindow(50, 50, winW, winH, "Sjakk")
 {}
@@ -19,19 +35,24 @@ void SjakkWindow::drawBoard() {
 
 void SjakkWindow::drawLegalMoves(vector<TDT4102::Point>& legalMoves){
     for(const auto& move : legalMoves){
-        if(((move.x/padX + move.y/padY) % 2) == 0){
-            draw_rectangle(move, padX, padY, TDT4102::Color(249, 240, 123));
+        if(((move.x + move.y) % 2) == 0){
+            draw_rectangle({move.x*padX, move.y*padY}, padX, padY, TDT4102::Color(249, 240, 123));
         }
         else{
-            draw_rectangle(move, padX, padY, TDT4102::Color(226, 207, 89));
+            draw_rectangle({move.x*padX, move.y*padY}, padX, padY, TDT4102::Color(226, 207, 89));
         }
     }
 }
 
 void SjakkWindow::drawPieces() {
-    for(int i = 0; i < pieces.size(); i++){
-        draw_image(pieces[i]->coordinate, pieces[i]->sprite, winW/8, winH/8);
+    for(int i = 0; i < 8; i++){
+        for(int j = 0; j < 8; j++){
+            if(map[j][i] != 0){
+                draw_image({j*padX, i*padY}, typeToSprite.at(map[j][i]), padX, padY);
+            }
+        }
     }
+    
 }
 
 void SjakkWindow::piecesNewSetup() {
@@ -44,75 +65,86 @@ void SjakkWindow::piecesNewSetup() {
     //Legger til nye brikker
     //Black pawns
     for(int i = 0; i < 8; i++){
-        pieces.push_back(new Pawn(i*padX,1*padY,-1));
+        pieces.push_back(new Pawn(i,1,-1));
     }
 
     //White pawns
     for(int i = 0; i < 8; i++){
-        pieces.push_back(new Pawn(i*padX,6*padY,1));
+        pieces.push_back(new Pawn(i,6,1));
     }
     //Tårn
-    pieces.push_back(new Rook(0*padX, 0*padY, -1));
-    pieces.push_back(new Rook(7*padX, 0*padY, -1));
-    pieces.push_back(new Rook(0*padX, 7*padY, 1));
-    pieces.push_back(new Rook(7*padX, 7*padY, 1));
+    pieces.push_back(new Rook(0, 0, -1));
+    pieces.push_back(new Rook(7, 0, -1));
+    pieces.push_back(new Rook(0, 7, 1));
+    pieces.push_back(new Rook(7, 7, 1));
     //Løper
-    pieces.push_back(new Bishop(2*padX, 0*padY, -1));
-    pieces.push_back(new Bishop(5*padX, 0*padY, -1));
-    pieces.push_back(new Bishop(2*padX, 7*padY, 1));
-    pieces.push_back(new Bishop(5*padX, 7*padY, 1));
+    pieces.push_back(new Bishop(2, 0, -1));
+    pieces.push_back(new Bishop(5, 0, -1));
+    pieces.push_back(new Bishop(2, 7, 1));
+    pieces.push_back(new Bishop(5, 7, 1));
     //Hest
-    pieces.push_back(new Horse(1*padX, 0*padY, -1));
-    pieces.push_back(new Horse(6*padX, 0*padY, -1));
-    pieces.push_back(new Horse(1*padX, 7*padY, 1));
-    pieces.push_back(new Horse(6*padX, 7*padY, 1));
+    pieces.push_back(new Horse(1, 0, -1));
+    pieces.push_back(new Horse(6, 0, -1));
+    pieces.push_back(new Horse(1, 7, 1));
+    pieces.push_back(new Horse(6, 7, 1));
     //Konge
-    pieces.push_back(new King(4*padX, 0*padY, -1));
-    pieces.push_back(new King(4*padX, 7*padY, 1));
+    pieces.push_back(new King(4, 0, -1));
+    pieces.push_back(new King(4, 7, 1));
     //Dronning
-    pieces.push_back(new Queen(3*padX, 0*padY, -1));
-    pieces.push_back(new Queen(3*padX, 7*padY, 1));
+    pieces.push_back(new Queen(3, 0, -1));
+    pieces.push_back(new Queen(3, 7, 1));
 
 
-    for(int i = 0; i < pieces.size(); i++){
-        string path = pieces[i]->getBasePath();
-        TDT4102::Image image{path};
-        pieces[i]->sprite = image;
-    }
+}
+
+void SjakkWindow::promotion(int pieceNr) {
+    int pieceXPos = pieces[pieceNr]->coordinate.x;
+    int pieceYPos = pieces[pieceNr]->coordinate.y;
+    int pieceSide = pieces[pieceNr]->side;
+
+    //Sletter bonden
+    delete pieces[pieceNr];
+    pieces.erase(pieces.begin() + pieceNr);
+
+    //Lager ny dronning
+    pieces.push_back(new Queen(pieceXPos, pieceYPos, pieceSide));
 
 }
 
 void SjakkWindow::movepiece() {
     while(!should_close()){
+        generateMap(map);
         drawBoard();
         drawPieces();
         Point mouseCord = get_mouse_coordinates();
         bool mouseClick = is_left_mouse_button_down();
         bool wasMoveLegal = false;
 
-        generateMap(map);
+        
 
 
         for(int i = 0; i < pieces.size(); i++){
             int pcx = pieces[i]->coordinate.x;
             int pcy = pieces[i]->coordinate.y;
-            if(mouseClick and (mouseCord.x > (pcx-5)) and (mouseCord.x < (pcx + padX+5)) and (mouseCord.y > pcy-5) and (mouseCord.y < (pcy + padY+5))){
+            if(mouseClick and (mouseCord.x > (pcx*padX-5)) and (mouseCord.x < (pcx*padX + padX+5)) and (mouseCord.y > pcy*padY-5) and (mouseCord.y < (pcy*padY + padY+5))){
                 pieces[i]->isActive = true;
-                vector<TDT4102::Point> legalMoves = getLegalMoves(pieces[i], map);
+                vector<TDT4102::Point> legalMoves = pieces[i]->getLegalMoves(map);
+                
+                //logikk om brikke er trykket på
                 while(!is_right_mouse_button_down()){
                     drawBoard();
+                    draw_rectangle({pcx*padX, pcy*padY}, padX, padY, TDT4102::Color::transparent, TDT4102::Color::crimson);
                     drawLegalMoves(legalMoves);
                     drawPieces();
                     mouseCord = get_mouse_coordinates();
-                    pieces[i]->coordinate.x = mouseCord.x-(padX/2);//(mouseCord.x + 50)/100 * 100;
-                    pieces[i]->coordinate.y = mouseCord.y-(padX/2);//(mouseCord.y + 50)/100 * 100;
+                    pieces[i]->coordinate.x = mouseCord.x/padX;
+                    pieces[i]->coordinate.y = mouseCord.y/padY;
                     next_frame();
                 }
                 pieces[i]->isActive = false;
 
+
                 //Sjekker om trekket var lovlig
-                pieces[i]->coordinate.x = (pieces[i]->coordinate.x + (padX/2)) / (winW/8) * (winW/8);
-                pieces[i]->coordinate.y = (pieces[i]->coordinate.y + (padX/2)) / (winH/8) * (winH/8);
                 //Setter wasMoveLegal til true om det var lovlig
                 for(const auto& move : legalMoves){
                     if(pieces[i]->coordinate.x == move.x and pieces[i]->coordinate.y == move.y){
@@ -127,12 +159,24 @@ void SjakkWindow::movepiece() {
                 }
                 else{wasMoveLegal = false;}
 
+
                 //Fikser om en brikke blir tatt
                 for(int j = 0; j < pieces.size(); j++){
                     if((pieces[i]->coordinate.x == pieces[j]->coordinate.x) and (pieces[i]->coordinate.y == pieces[j]->coordinate.y) and (i != j)){
                         delete pieces[j];
                         pieces.erase(pieces.begin()+j);
                         break;
+                    }
+                }
+
+
+                //Fikser om det er promotion
+                if(pieces[i]->getPieceType() == 1){
+                    if(pieces[i]->side == 1 and pieces[i]->coordinate.y == 0){
+                        promotion(i);
+                    }
+                    else if(pieces[i]->side == -1 and pieces[i]->coordinate.y == 7){
+                        promotion(i);
                     }
                 }
 
@@ -156,7 +200,7 @@ void SjakkWindow::generateMap(int (&map)[8][8]){
     }
 
     for(const auto& piece : pieces){
-        map[piece->coordinate.x/padX][piece->coordinate.y/padY] = piece->getPieceType() * (piece->side);
+        map[piece->coordinate.x][piece->coordinate.y] = piece->getPieceType() * (piece->side);
     }
 
 }

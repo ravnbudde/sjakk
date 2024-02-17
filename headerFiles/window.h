@@ -1,3 +1,4 @@
+#pragma once
 #include "std_lib_facilities.h"
 #include "AnimationWindow.h"
 #include "pieces.h"
@@ -8,7 +9,7 @@
 #include "queen.h"
 #include "king.h"
 #include "gameLogicSupport.h"
-#pragma once
+
 
 
 using namespace TDT4102;
@@ -29,6 +30,10 @@ class SjakkWindow : public AnimationWindow {
     void movepiece();
 
 
+    void promotion(int pieceNr);
+
+
+
     //Ting til map, for å beregne lovlige trekk osv...
     int map[8][8] = {
         {0,0,0,0,0,0,0,0},
@@ -44,6 +49,7 @@ class SjakkWindow : public AnimationWindow {
     void generateMap(int (&map)[8][8]);
 
     private:
+    
 
 
 
