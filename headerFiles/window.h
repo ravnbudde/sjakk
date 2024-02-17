@@ -36,6 +36,10 @@ class SjakkWindow : public AnimationWindow {
     //promotion
     void promotion(int pieceNr);
 
+    //castle
+    bool castleLeft(int pieceNrKing);
+    bool castleRight(int pieceNrKing);
+
     //variabler, Ting til map, for å beregne lovlige trekk osv...
     vector<Piece*> pieces;
     int map[8][8] = {

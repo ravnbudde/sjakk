@@ -24,10 +24,10 @@ void SjakkWindow::drawBoard() {
     for(int i = 0; i < 8; i++){
         for(int j = 0; j < 8; j++){
             if(((i+j) % 2) == 0){
-                draw_rectangle({i*padX, j*padY}, padX, padY, TDT4102::Color(250, 0, 250));//TDT4102::Color(242,225,195));
+                draw_rectangle({i*padX, j*padY}, padX, padY, TDT4102::Color(242,225,195));// TDT4102::Color(250, 0, 250));//TDT4102::Color(242,225,195));
             }
             else{
-                draw_rectangle({i*padX, j*padY}, padX, padY, TDT4102::Color(150,0,150));//TDT4102::Color(195,160,130));
+                draw_rectangle({i*padX, j*padY}, padX, padY, TDT4102::Color(195,160,130));// TDT4102::Color(150,0,150));//TDT4102::Color(195,160,130));
             }
         }
     }
@@ -119,6 +119,33 @@ void SjakkWindow::promotion(int pieceNr) {
 
 }
 
+bool SjakkWindow::castleLeft(int pieceNrKing) {
+    int color = pieces[pieceNrKing]->side;
+    if(map[pieces[pieceNrKing]->coordinate.x-1][pieces[pieceNrKing]->coordinate.y] == 0 
+    and map[pieces[pieceNrKing]->coordinate.x-2][pieces[pieceNrKing]->coordinate.y] == 0
+    and map[pieces[pieceNrKing]->coordinate.x-3][pieces[pieceNrKing]->coordinate.y] == 0){
+        for(const auto& i : pieces){
+            if(i->getPieceType() == 5 and i->virginMove and i->coordinate.x == 0 and i->side == pieces[pieceNrKing]->side){
+                return true;
+            }
+        } 
+    }
+    return false;
+}
+
+bool SjakkWindow::castleRight(int pieceNrKing) {
+    int color = pieces[pieceNrKing]->side;
+    if(map[pieces[pieceNrKing]->coordinate.x+1][pieces[pieceNrKing]->coordinate.y] == 0 
+    and map[pieces[pieceNrKing]->coordinate.x+2][pieces[pieceNrKing]->coordinate.y] == 0){
+        for(const auto& i : pieces){
+            if(i->getPieceType() == 5 and i->virginMove and i->coordinate.x == 7 and i->side == pieces[pieceNrKing]->side){
+                return true;
+            }
+        } 
+    }
+    return false;
+}
+
 void SjakkWindow::movepiece() {
     while(!should_close()){
         generateMap(map);
@@ -136,7 +163,40 @@ void SjakkWindow::movepiece() {
             int pcy = pieces[i]->coordinate.y;
             if(mouseClick and (mouseCord.x > (pcx*padX-5)) and (mouseCord.x < (pcx*padX + padX+5)) and (mouseCord.y > pcy*padY-5) and (mouseCord.y < (pcy*padY + padY+5))){
                 pieces[i]->isActive = true;
+                bool castleL = false;
+                int indexCastleL;
+                bool castleR = false;
+                int indexCastleR;
                 vector<TDT4102::Point> legalMoves = pieces[i]->getLegalMoves(map);
+
+                //sjekker om du kan castle
+                if(pieces[i]->getPieceType()==10 and pieces[i]->virginMove){
+                    castleL = castleLeft(i);
+                    castleR = castleRight(i);
+                }
+                TDT4102::Point castleCord;
+                if(castleL){
+                    castleCord.x = pieces[i]->coordinate.x - 2;
+                    castleCord.y = pieces[i]->coordinate.y;
+                    legalMoves.push_back(castleCord);
+                    for(int j = 0; j < pieces.size(); j++){
+                        if(pieces[j]->getPieceType() == 5 and pieces[j]->coordinate.x == pieces[i]->coordinate.x-4 and pieces[j]->coordinate.y == pieces[i]->coordinate.y){
+                            indexCastleL = j;
+                        }
+                    }
+                }
+                if(castleR){
+                    castleCord.x = pieces[i]->coordinate.x + 2;
+                    castleCord.y = pieces[i]->coordinate.y;
+                    legalMoves.push_back(castleCord);
+                    for(int j = 0; j < pieces.size(); j++){
+                        if(pieces[j]->getPieceType() == 5 and pieces[j]->coordinate.x == pieces[i]->coordinate.x+3 and pieces[j]->coordinate.y == pieces[i]->coordinate.y){
+                            indexCastleR = j;
+                        }
+                    }
+                }
+
+
                 
                 //logikk om brikke er trykket på
                 while(!is_right_mouse_button_down()){
@@ -171,6 +231,13 @@ void SjakkWindow::movepiece() {
                 }
                 else{wasMoveLegal = false;}
 
+                //om castle
+                if(castleL and (pieces[indexCastleL]->coordinate.x-pieces[i]->coordinate.x) == -2){
+                    pieces[indexCastleL]->coordinate.x += 3;
+                }
+                else if(castleR and (pieces[indexCastleR]->coordinate.x-pieces[i]->coordinate.x == 1)){
+                    pieces[indexCastleR]->coordinate.x -= 2;
+                }
 
                 //Fikser om en brikke blir tatt
                 for(int j = 0; j < pieces.size(); j++){
