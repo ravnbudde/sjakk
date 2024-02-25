@@ -54,93 +54,13 @@ void Game::forwardMove(){
 }
 
 
-vector<TDT4102::Point> Game::getLegalMoves(TDT4102::Point activeSquare){
-    //Henter alle pseudolovlige trekk til brikken
-    vector<TDT4102::Point> pseudoLegalMoves = board.the_board[activeSquare.x][activeSquare.y]->getLegalMoves(board.map, activeSquare);
-    int color = board.the_board[activeSquare.x][activeSquare.y]->side;
-    vector<TDT4102::Point>legalMoves;
-
-    //Lage en kopi av brettet i funksjonen. tror det er her det blir noe feil?
-    Board tempBoard{};
-    tempBoard.turn = board.turn;
-    for(int y = 0; y < 8; y++){
-        for(int x = 0; x < 8; x++){
-            //tempBoard.the_board[x][y] = board.the_board[x][y];
-            if(board.the_board[x][y] == nullptr){
-                tempBoard.the_board[x][y] = nullptr;
-                //cout << 0 << '\t';
-            }
-            else if(board.the_board[x][y]->getPieceType() == 1){
-                tempBoard.the_board[x][y] = new Pawn(board.the_board[x][y]->side);
-                //cout << tempBoard.the_board[x][y]->getPieceType()*tempBoard.the_board[x][y]->side << '\t';
-            }
-            else if(board.the_board[x][y]->getPieceType() == 3){
-                tempBoard.the_board[x][y] = new Horse(board.the_board[x][y]->side);
-                //cout << tempBoard.the_board[x][y]->getPieceType()*tempBoard.the_board[x][y]->side << '\t';
-            }
-            else if(board.the_board[x][y]->getPieceType() == 4){
-                tempBoard.the_board[x][y] = new Bishop(board.the_board[x][y]->side);
-                //cout << tempBoard.the_board[x][y]->getPieceType()*tempBoard.the_board[x][y]->side << '\t';
-            }
-            else if(board.the_board[x][y]->getPieceType() == 5){
-                tempBoard.the_board[x][y] = new Rook(board.the_board[x][y]->side);
-                //cout << tempBoard.the_board[x][y]->getPieceType()*tempBoard.the_board[x][y]->side << '\t';
-            }
-            else if(board.the_board[x][y]->getPieceType() == 9){
-                tempBoard.the_board[x][y] = new Queen(board.the_board[x][y]->side);
-                //cout << tempBoard.the_board[x][y]->getPieceType()*tempBoard.the_board[x][y]->side << '\t';
-            }
-            else if(board.the_board[x][y]->getPieceType() == 10){
-                tempBoard.the_board[x][y] = new King(board.the_board[x][y]->side);
-                //cout << tempBoard.the_board[x][y]->getPieceType()*tempBoard.the_board[x][y]->side << '\t';
-            }
-            else{
-                tempBoard.the_board[x][y] = nullptr;
-                //cout << 0 << '\t';
-            }
-        }
-        //cout << endl;
-    }
-
-    
-
-    //ser på brikken vi skal sjekke
-    Piece* piece = tempBoard.the_board[activeSquare.x][activeSquare.y];
-    //om det ikke er en brikke return tom vektor
-    if(piece == nullptr){return pseudoLegalMoves;}
-
-
-
-    for(int i = 0; i < pseudoLegalMoves.size(); i++){
-        tempBoard.generateMap();
-            //returnerer bare true på firkanter 1 unna brikka
-        if(tempBoard.TryToMove(activeSquare,pseudoLegalMoves.at(i))){
-
-            
-            //print8x8arr(tempBoard.map);
-            tempBoard.Move(activeSquare, pseudoLegalMoves.at(i));
-            tempBoard.generateMap();
-
-                
-            if(!tempBoard.isInCheck(color)){
-                legalMoves.push_back(pseudoLegalMoves.at(i));
-            }
-
-            tempBoard.Move(pseudoLegalMoves.at(i), activeSquare);
-        }
-    }
-
-    //tempboard slettes av seg selv når man går ut av funksjonen    
-    
-    return legalMoves;
-}
 
 void Game::playGame(){
     //selve spillet
     TDT4102::Point activeSquare(8,8);
     TDT4102::Point moveTo(8,8);
     vector<TDT4102::Point> legalMoves;
-    vector<TDT4102::Point> legalMovescheck;
+    //vector<TDT4102::Point> legalMovescheck;
 
 
     bool prevMouseClick = false;
@@ -153,11 +73,12 @@ void Game::playGame(){
         mouseCord.y /= padY;  
         bool isHistory = history.size() > 0;
         bool isForwardHistory = forwardHistory.size() > 0;
+        
 
         //Faktisk tegne spillet
         board.generateMap();
         win.drawBoard();
-        win.drawLegalMoves(legalMovescheck);
+        win.drawLegalMoves(legalMoves);
         //win.drawLegalMoves(legalMoves);
         win.drawPieces(board.map);
         win.drawAroundActivePiece(activeSquare);
@@ -207,9 +128,9 @@ void Game::playGame(){
                 //Bytter aktivert brikke
                 activeSquare = mouseCord;
                 
-                //legalMoves = getLegalMoves(activeSquare);
-                legalMovescheck = getLegalMoves(activeSquare);
-                legalMoves = board.the_board[activeSquare.x][activeSquare.y]->getLegalMoves(board.map, activeSquare); //getLegalMoves(activeSquare);    
+                legalMoves = board.filterLegalMoves(activeSquare);
+                //legalMovescheck = getLegalMoves(activeSquare);
+                //legalMoves = board.the_board[activeSquare.x][activeSquare.y]->getLegalMoves(board.map, activeSquare); //getLegalMoves(activeSquare);    
             }
         }
         prevMouseClick = currentMouseClick;

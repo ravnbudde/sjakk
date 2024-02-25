@@ -27,6 +27,7 @@ public:
     TDT4102::Point GetEnPassant();
     int turn;
     bool isInCheck(int side) const;
+        vector<TDT4102::Point> filterLegalMoves(TDT4102::Point activeSquare);
 
 
 
