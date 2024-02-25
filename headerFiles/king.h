@@ -5,10 +5,10 @@
 
 class King : public Piece {
     public:
-    King(int x, int y, int side);
+    King(int side);
     
     int getPieceType() const override;
-    vector<TDT4102::Point> getLegalMoves(int (&map)[8][8]) override;
+    vector<TDT4102::Point> getLegalMoves(int (&map)[8][8], TDT4102::Point from) override;
 };
 
 

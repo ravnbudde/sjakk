@@ -1,26 +1,20 @@
 #include "std_lib_facilities.h"
-#include "AnimationWindow.h"
-#include "headerFiles/window.h"
+#include "headerFiles/game.h"
 
 
 
 int main() {
 
+    //Board board{};
+    //cout << board.pieceAt(TDT4102::Point(0,3))->getPieceType()*board.pieceAt(TDT4102::Point(0,3))->side << endl;
 
+    Game game{};
+    
+    game.board.generateMap();
 
-
-
-
-    SjakkWindow win{};
-    win.piecesNewSetup();
-
-    win.movepiece();
-
-
-    for(const auto& piece : win.pieces){
-        delete piece;
-    }
-    win.pieces.clear();
+    //cout << game.board.map[0][0] << endl;
+    
+    game.playGame();
 
 
 

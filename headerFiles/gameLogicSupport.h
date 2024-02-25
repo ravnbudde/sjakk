@@ -3,11 +3,11 @@
 #include "pieces.h"
 
 //Legg til  forskjellig regler osv. i en class?
-
+//Standard square brett, winH:winW = 8:10
 constexpr int winH = 800;
-constexpr int winW = 800;
+constexpr int winW = 1000;
 
-constexpr int padX = winW/8;
+constexpr int padX = winW/10;
 constexpr int padY = winH/8;
 
 const TDT4102::Image whitePawnSprite{"spritePNGs/pawnWhite.png"};

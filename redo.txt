@@ -1,0 +1,10 @@
+for å kunne implementere AI etterhvert, må jeg endre på basically alt av gamelogic
+
+Starter med å lage hele spillet fra starten av, beholder så mye som mulig fra pieces etc, men window må lages på nytt
+Ting som må gjøres:
+
+Lage en typ history?
+lage en board class         sjekk
+lage en game class         starta
+window skal bare tegne
+

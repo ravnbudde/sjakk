@@ -1,15 +1,15 @@
 #include "headerFiles/rook.h"
 
-Rook::Rook(int x, int y, int side): Piece(x, y, side)
+Rook::Rook(int side): Piece(side)
 {}
 int Rook::getPieceType() const {
     return 5;
 }
-vector<TDT4102::Point> Rook::getLegalMoves(int (&map)[8][8]) {
+vector<TDT4102::Point> Rook::getLegalMoves(int (&map)[8][8], TDT4102::Point from) {
     vector<TDT4102::Point> moves;
     TDT4102::Point move;
-    move.x = coordinate.x;
-    move.y = coordinate.y;
+    move.x = from.x;
+    move.y = from.y;
     //opp
     while(move.y > -1){
         move.y -= 1;
@@ -23,7 +23,7 @@ vector<TDT4102::Point> Rook::getLegalMoves(int (&map)[8][8]) {
         else{break;}
     }
     //ned
-    move.y = coordinate.y;
+    move.y = from.y;
     while(move.y < 8*1+1){
         move.y += 1;
         if(map[move.x/1][move.y/1]*side < 0){    
@@ -37,7 +37,7 @@ vector<TDT4102::Point> Rook::getLegalMoves(int (&map)[8][8]) {
     }
 
     //venstre
-    move.y = coordinate.y;
+    move.y = from.y;
     while(move.x > -1){
         move.x -= 1;
         if(map[move.x/1][move.y/1]*side < 0){    
@@ -51,7 +51,7 @@ vector<TDT4102::Point> Rook::getLegalMoves(int (&map)[8][8]) {
     }
 
     //høyre
-    move.x = coordinate.x;
+    move.x = from.x;
     while(move.x < 8*1+1){
         move.x += 1;
         if(map[move.x/1][move.y/1]*side < 0){    

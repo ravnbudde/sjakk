@@ -4,10 +4,10 @@
 
 class Rook : public Piece {
     public:
-    Rook(int x, int y, int side);
+    Rook(int side);
     
     int getPieceType() const override;
-    vector<TDT4102::Point> getLegalMoves(int (&map)[8][8]) override;
+    vector<TDT4102::Point> getLegalMoves(int (&map)[8][8], TDT4102::Point from) override;
 };
 
 

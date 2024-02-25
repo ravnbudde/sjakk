@@ -30,6 +30,8 @@ exe = executable(
   'program',
   src,
 'bishop.cpp',
+'board.cpp',
+'game.cpp',
 'gameLogicSupport.cpp',
 'horse.cpp',
 'king.cpp',
