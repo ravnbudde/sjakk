@@ -11,9 +11,10 @@
 class Piece {
     public:
     Piece(int side);
+    //destruktør
     virtual ~Piece();
     virtual int getPieceType() const; //1:pawn, 3: horse, 4: bishop, 5: rook, 9: queen, 10: king
-    
+
     virtual vector<TDT4102::Point> getLegalMoves(int (&map)[8][8], TDT4102::Point from);
 
 

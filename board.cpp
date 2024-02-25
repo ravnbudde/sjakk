@@ -105,35 +105,37 @@ bool Board::TryToMove(TDT4102::Point from, TDT4102::Point to){
 
 }
 
-// bool Board::isInCheck(int side){
-//     TDT4102::Point kingCord;
-//     for(int y = 0; y < 8; y++){
-//         for(int x = 0; x < 8; x++){
-//             if(the_board[x][y]->getPieceType() == 10){
-//                 if(the_board[x][y]->side == side){
-//                     kingCord.x = x;
-//                     kingCord.y = y;
-//                 }
-//             }
-//         }
-//     }
-//     cout << kingCord.x << ", " << kingCord.y << endl;
-//     for(int y = 0; y < 8; y++){
-//         for(int x = 0; x < 8; x++){
-//             Piece* tempPiece = the_board[x][y];
-//             if(tempPiece != nullptr and tempPiece->side != side){
-//                 vector<TDT4102::Point> moves = tempPiece->getLegalMoves(map, TDT4102::Point(x,y));
-//                 for(const auto& cord : moves){
-//                     if(cord.x == kingCord.x and cord.y == kingCord.y){
-//                         return true;
-//                     }
-//                 }
-//             }
-//         }
+bool Board::isInCheck(int side){
+    TDT4102::Point kingCord;
+    for(int y = 0; y < 8; y++){
+        for(int x = 0; x < 8; x++){
+            if(the_board[x][y] != nullptr){    
+                if(the_board[x][y]->getPieceType() == 10){
+                    if(the_board[x][y]->side == side){
+                        kingCord.x = x;
+                        kingCord.y = y;
+                    }
+                }
+            }
+        }
+    }
+    //cout << kingCord.x << ", " << kingCord.y << endl;
+    for(int y = 0; y < 8; y++){
+        for(int x = 0; x < 8; x++){
+            Piece* tempPiece = the_board[x][y];
+            if(tempPiece != nullptr and tempPiece->side != side){
+                vector<TDT4102::Point> moves = tempPiece->getLegalMoves(map, TDT4102::Point(x,y));
+                for(const auto& cord : moves){
+                    if(cord.x == kingCord.x and cord.y == kingCord.y){
+                        return true;
+                    }
+                }
+            }
+        }
         
-//     }
-//     return false;
-// }
+    }
+    return false;
+}
 
 Piece* Board::pieceAt(TDT4102::Point point){
     return the_board[point.x][point.y];

@@ -25,7 +25,7 @@ public:
     bool TryToMove(TDT4102::Point from, TDT4102::Point to);
     TDT4102::Point GetEnPassant();
     int turn;
-    //bool isInCheck(int side);
+    bool isInCheck(int side);
 
     int map[8][8] = {
         {0,0,0,0,0,0,0,0},

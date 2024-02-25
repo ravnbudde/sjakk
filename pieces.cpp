@@ -2,7 +2,6 @@
 
 Piece::Piece(int side): side(side)
 {}
-
 Piece::~Piece() {}
 int Piece::getPieceType() const{
     return 0;

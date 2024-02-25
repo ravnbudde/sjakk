@@ -13,7 +13,7 @@ void Game::updateTimes(){
 }
 
 void Game::undoMove(){
-    unsigned long long lastMoveIndex = history.size()-1;
+    int lastMoveIndex = history.size()-1;
 
     Point movedFrom = history.at(lastMoveIndex).at(0);
     Point movedTo = history.at(lastMoveIndex).at(1);
@@ -49,21 +49,50 @@ void Game::forwardMove(){
 //     int color = board.the_board[activeSquare.x][activeSquare.y]->side;
 //     vector<TDT4102::Point>legalMoves;
 
-//     //Lage en kopi av brettet i funksjonen
+//     //Lage en kopi av brettet i funksjonen. tror det er her det blir noe feil?
 //     Board tempBoard{};
 //     for(int y = 0; y < 8; y++){
 //         for(int x = 0; x < 8; x++){
 //             if(board.the_board[x][y] == nullptr){
 //                 tempBoard.the_board[x][y] = nullptr;
+//                 cout << 0 << '\t';
+//             }
+//             else if(board.the_board[x][y]->getPieceType() == 1){
+//                 tempBoard.the_board[x][y] = new Pawn(board.the_board[x][y]->side);
+//                 cout << tempBoard.the_board[x][y]->getPieceType()*tempBoard.the_board[x][y]->side << '\t';
+//             }
+//             else if(board.the_board[x][y]->getPieceType() == 3){
+//                 tempBoard.the_board[x][y] = new Horse(board.the_board[x][y]->side);
+//                 cout << tempBoard.the_board[x][y]->getPieceType()*tempBoard.the_board[x][y]->side << '\t';
+//             }
+//             else if(board.the_board[x][y]->getPieceType() == 4){
+//                 tempBoard.the_board[x][y] = new Bishop(board.the_board[x][y]->side);
+//                 cout << tempBoard.the_board[x][y]->getPieceType()*tempBoard.the_board[x][y]->side << '\t';
+//             }
+//             else if(board.the_board[x][y]->getPieceType() == 5){
+//                 tempBoard.the_board[x][y] = new Rook(board.the_board[x][y]->side);
+//                 cout << tempBoard.the_board[x][y]->getPieceType()*tempBoard.the_board[x][y]->side << '\t';
+//             }
+//             else if(board.the_board[x][y]->getPieceType() == 9){
+//                 tempBoard.the_board[x][y] = new Queen(board.the_board[x][y]->side);
+//                 cout << tempBoard.the_board[x][y]->getPieceType()*tempBoard.the_board[x][y]->side << '\t';
+//             }
+//             else if(board.the_board[x][y]->getPieceType() == 10){
+//                 tempBoard.the_board[x][y] = new King(board.the_board[x][y]->side);
+//                 cout << tempBoard.the_board[x][y]->getPieceType()*tempBoard.the_board[x][y]->side << '\t';
 //             }
 //             else{
-//                 tempBoard.the_board[x][y] = new Piece(*board.the_board[x][y]);
+//                 tempBoard.the_board[x][y] = nullptr;
+//                 cout << 0 << '\t';
 //             }
 //         }
+//         cout << endl;
 //     }
 
+    
+
 //     //ser på brikken vi skal sjekke
-//     Piece* piece = board.the_board[activeSquare.x][activeSquare.y];
+//     Piece* piece = tempBoard.the_board[activeSquare.x][activeSquare.y];
 //     //om det ikke er en brikke return tom vektor
 //     if(piece == nullptr){return pseudoLegalMoves;}
 
@@ -141,7 +170,7 @@ void Game::playGame(){
                 activeSquare = TDT4102::Point(8,8);
                 legalMoves.clear();
                 //cout << true << endl;
-                //cout << board.isInCheck(board.the_board[mouseCord.x][mouseCord.y]->side);
+                cout << board.isInCheck(board.the_board[mouseCord.x][mouseCord.y]->side*(-1)) << endl;
             }
             else if(board.map[mouseCord.x][mouseCord.y] == 0){
                 //Stopp å vise lovlige trekk osv..
@@ -151,6 +180,7 @@ void Game::playGame(){
             else{
                 //Bytter aktivert brikke
                 activeSquare = mouseCord;
+                //legalMoves = getLegalMoves(activeSquare);
                 legalMoves = board.the_board[activeSquare.x][activeSquare.y]->getLegalMoves(board.map, activeSquare); //getLegalMoves(activeSquare);    
             }
         }

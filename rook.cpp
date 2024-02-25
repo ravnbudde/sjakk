@@ -52,7 +52,7 @@ vector<TDT4102::Point> Rook::getLegalMoves(int (&map)[8][8], TDT4102::Point from
 
     //høyre
     move.x = from.x;
-    while(move.x < 8*1+1){
+    while(move.x < 7){
         move.x += 1;
         if(map[move.x/1][move.y/1]*side < 0){    
             moves.push_back(move);

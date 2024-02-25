@@ -26,7 +26,7 @@ vector<TDT4102::Point> Pawn::getLegalMoves(int (&map)[8][8], TDT4102::Point from
         move.y = from.y + dy*1;
         move.x = from.x;
         moves.push_back(move);
-        if(virginMove){
+        if(virginMove and map[from.x][from.y+2*dy]==0){
             move.y = from.y +2*dy*1;
             move.x = from.x;
             moves.push_back(move);
