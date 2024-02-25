@@ -3,6 +3,15 @@
 Board::Board(): en_passant{NULL}, turn{1} 
 {BoardNewSetup();}
 
+Board::~Board()
+{
+    for(int y = 0; y < 8; y++){
+        for(int x = 0; x < 8; x++){
+            delete the_board[x][y];
+            the_board[x][y] = nullptr;
+        }
+    } 
+}
 
 
 void Board::BoardNewSetup(){
@@ -58,6 +67,9 @@ void Board::generateMap(){
 }
 
 void Board::Move(TDT4102::Point from, TDT4102::Point to){
+    //gjør ikkeno om trekk er utenfor brettet
+    if(from.x > 7 or from.x<0 or from.y>7 or from.y<0 or to.x>7 or to.x<0 or to.y>7 or to.y<0)
+        return;
     //Sjekker om det er en pawn sitt første trekk, og det skal være lovlig med en passant
     if(the_board[from.x][from.y]->getPieceType() == 1 and abs(from.y - to.y) == 2){
         if(from.x == 1){
@@ -82,7 +94,7 @@ void Board::Move(TDT4102::Point from, TDT4102::Point to){
     else{turn = 1;}
 }
 
-bool Board::TryToMove(TDT4102::Point from, TDT4102::Point to){
+bool Board::TryToMove(TDT4102::Point from, TDT4102::Point to) const{
     if(0 > from.x or from.x > 7 or 0 > from.y or from.y > 7 or 0 > to.x or to.x > 7 or 0 > to.y or to.y > 7){return false;}
     Piece* piece = the_board[from.x][from.y];
     //Retrun false om du flytter et tomt felt
@@ -92,8 +104,7 @@ bool Board::TryToMove(TDT4102::Point from, TDT4102::Point to){
     //om trekkene er utenfor brettet
     
 
-    //Sjekker om trekket er lovlig
-    generateMap();
+    //Sjekker om trekket er lovlig;
     vector<TDT4102::Point> legalMoves = piece->getLegalMoves(map, from);
     for(TDT4102::Point point : legalMoves){
         if(point.x == to.x and point.y == to.y){
@@ -105,7 +116,7 @@ bool Board::TryToMove(TDT4102::Point from, TDT4102::Point to){
 
 }
 
-bool Board::isInCheck(int side){
+bool Board::isInCheck(int side) const{
     TDT4102::Point kingCord;
     for(int y = 0; y < 8; y++){
         for(int x = 0; x < 8; x++){
@@ -119,6 +130,18 @@ bool Board::isInCheck(int side){
             }
         }
     }
+
+    // for(int y = 0; y < 8; y++){
+    //     for(int x = 0; x < 8; x++){
+    //         if(the_board[x][y] == nullptr){
+    //             cout << 0 << '\t';
+    //         }
+    //         else{cout << the_board[x][y]->getPieceType()*the_board[x][y]->side << '\t';}
+    //     }
+    //     cout << endl;
+    // }
+    cout << endl << endl;
+
     //cout << kingCord.x << ", " << kingCord.y << endl;
     for(int y = 0; y < 8; y++){
         for(int x = 0; x < 8; x++){

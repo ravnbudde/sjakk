@@ -18,14 +18,17 @@ private:
 
 public:
     Board();
+    ~Board();
     Piece* the_board[8][8];
     Piece* pieceAt(TDT4102::Point point);
     void PlacePieceAt(Piece* piece, TDT4102::Point point);
     void Move(TDT4102::Point from, TDT4102::Point to); 
-    bool TryToMove(TDT4102::Point from, TDT4102::Point to);
+    bool TryToMove(TDT4102::Point from, TDT4102::Point to) const;
     TDT4102::Point GetEnPassant();
     int turn;
-    bool isInCheck(int side);
+    bool isInCheck(int side) const;
+
+
 
     int map[8][8] = {
         {0,0,0,0,0,0,0,0},

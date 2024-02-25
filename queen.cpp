@@ -6,7 +6,7 @@ Queen::Queen(int side): Piece(side)
 int Queen::getPieceType() const {
     return 9;
 }
-vector<TDT4102::Point> Queen::getLegalMoves(int (&map)[8][8], TDT4102::Point from) {
+vector<TDT4102::Point> Queen::getLegalMoves(const int (&map)[8][8], TDT4102::Point from) {
     vector<TDT4102::Point> moves;
     TDT4102::Point move;
 
@@ -28,7 +28,7 @@ vector<TDT4102::Point> Queen::getLegalMoves(int (&map)[8][8], TDT4102::Point fro
     //opp til høyre
     move.x = from.x;
     move.y = from.y;
-    while(move.y > -1 and move.x < 7){
+    while(move.y > -1 and move.x < 8){
         move.x += 1;
         move.y -= 1;
         if(map[move.x/1][move.y/1]*side < 0){    
@@ -43,7 +43,7 @@ vector<TDT4102::Point> Queen::getLegalMoves(int (&map)[8][8], TDT4102::Point fro
     //ned til venstre
     move.x = from.x;
     move.y = from.y;
-    while(move.y < 8*1 + 1){
+    while(move.y < 8){
         move.x -= 1;
         move.y += 1;
         if(map[move.x/1][move.y/1]*side < 0){    
@@ -58,7 +58,7 @@ vector<TDT4102::Point> Queen::getLegalMoves(int (&map)[8][8], TDT4102::Point fro
     //ned til høyre
     move.x = from.x;
     move.y = from.y;
-    while(move.y < 8 and move.x < 7){
+    while(move.y < 8 and move.x < 8){
         move.x += 1;
         move.y += 1;
         if(map[move.x/1][move.y/1]*side < 0){    
@@ -86,7 +86,7 @@ vector<TDT4102::Point> Queen::getLegalMoves(int (&map)[8][8], TDT4102::Point fro
     }
     //ned
     move.y = from.y;
-    while(move.y < 8*1+1){
+    while(move.y < 8){
         move.y += 1;
         if(map[move.x/1][move.y/1]*side < 0){    
             moves.push_back(move);
@@ -112,7 +112,7 @@ vector<TDT4102::Point> Queen::getLegalMoves(int (&map)[8][8], TDT4102::Point fro
     }
     //høyre
     move.x = from.x;
-    while(move.x < 7){
+    while(move.x < 8){
         move.x += 1;
         if(map[move.x/1][move.y/1]*side < 0){    
             moves.push_back(move);

@@ -3,5 +3,8 @@
     "cmake.configureOnOpen": false,
     "cmake.autoSelectActiveFolder": false,
     "cmake.configureOnEdit": false,
-    "makefile.alwaysPreConfigure": false
+    "makefile.alwaysPreConfigure": false,
+    "files.associations": {
+        "iostream": "cpp"
+    }
 }

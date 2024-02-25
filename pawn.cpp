@@ -5,7 +5,7 @@ Pawn::Pawn(int side): Piece(side)
 int Pawn::getPieceType() const {
     return 1;
 }
-vector<TDT4102::Point> Pawn::getLegalMoves(int (&map)[8][8], TDT4102::Point from) {
+vector<TDT4102::Point> Pawn::getLegalMoves(const int (&map)[8][8], TDT4102::Point from) {
     vector<TDT4102::Point> moves;
     TDT4102::Point move;
 

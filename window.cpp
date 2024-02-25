@@ -1,19 +1,27 @@
 #include "headerFiles/window.h"
+enum PieceName{
+    Pawn = 1, 
+    Horse = 2, 
+    Bishop = 4, 
+    Rook = 5, 
+    Queen = 9, 
+    King = 10
+};
 
 map<int, TDT4102::Image> typeToSprite{
-        {1, whitePawnSprite},
-        {3, whiteHorseSprite},
-        {4, whiteBishopSprite},
-        {5, whiteRookSprite},
-        {9, whiteQueenSprite},
-        {10, whiteKingSprite},
-        {-1, blackPawnSprite},
-        {-3, blackHorseSprite},
-        {-4, blackBishopSprite},
-        {-5, blackRookSprite},
-        {-9, blackQueenSprite},
-        {-10, blackKingSprite}
-    };
+    {1, whitePawnSprite},
+    {3, whiteHorseSprite},
+    {4, whiteBishopSprite},
+    {5, whiteRookSprite},
+    {9, whiteQueenSprite},
+    {10, whiteKingSprite},
+    {-1, blackPawnSprite},
+    {-3, blackHorseSprite},
+    {-4, blackBishopSprite},
+    {-5, blackRookSprite},
+    {-9, blackQueenSprite},
+    {-10, blackKingSprite}
+};
 
 
 

@@ -6,20 +6,20 @@ Bishop::Bishop(int side): Piece(side)
 int Bishop::getPieceType() const {
     return 4;
 }
-vector<TDT4102::Point> Bishop::getLegalMoves(int (&map)[8][8], TDT4102::Point from) {
+vector<TDT4102::Point> Bishop::getLegalMoves(const int (&map)[8][8], TDT4102::Point from) {
     vector<TDT4102::Point> moves;
     TDT4102::Point move;
     move.x = from.x;
     move.y = from.y;
     //Opp til venstre
-    while(move.y > -1){
+    while(move.y > -1 and move.x > -1){
         move.x -= 1;
         move.y -= 1;
         if(map[move.x][move.y]*side < 0){    
             moves.push_back(move);
             break;
         }
-        else if(map[move.x][move.y/1]*side == 0){    
+        else if(map[move.x][move.y]*side == 0){    
             moves.push_back(move);
         }
         else{break;}
@@ -27,7 +27,7 @@ vector<TDT4102::Point> Bishop::getLegalMoves(int (&map)[8][8], TDT4102::Point fr
     //opp til høyre
     move.x = from.x;
     move.y = from.y;
-    while(move.y > -1 and move.x < 7){
+    while(move.y > -1 and move.x < 8){
         move.x += 1;
         move.y -= 1;
         if(map[move.x][move.y]*side < 0){    
@@ -43,7 +43,7 @@ vector<TDT4102::Point> Bishop::getLegalMoves(int (&map)[8][8], TDT4102::Point fr
     //ned til venstre
     move.x = from.x;
     move.y = from.y;
-    while(move.y < 7 and move.x < 7){
+    while(move.y < 8 and move.x < 8){
         move.x -= 1;
         move.y += 1;
         if(map[move.x/1][move.y/1]*side < 0){    
@@ -59,7 +59,7 @@ vector<TDT4102::Point> Bishop::getLegalMoves(int (&map)[8][8], TDT4102::Point fr
     //ned til høyre
     move.x = from.x;
     move.y = from.y;
-    while(move.y < 7 and move.x < 7){
+    while(move.y < 8 and move.x < 8){
         move.x += 1;
         move.y += 1;
         if(map[move.x/1][move.y/1]*side < 0){    

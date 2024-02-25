@@ -6,7 +6,7 @@ King::King(int side): Piece(side)
 int King::getPieceType() const {
     return 10;
 }
-vector<TDT4102::Point> King::getLegalMoves(int (&map)[8][8], TDT4102::Point from) {
+vector<TDT4102::Point> King::getLegalMoves(const int (&map)[8][8], TDT4102::Point from) {
     vector<TDT4102::Point> moves;
     TDT4102::Point move;
 

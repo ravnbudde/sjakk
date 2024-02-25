@@ -3,6 +3,17 @@
 Game::Game(): gamestate{"active"}, board{Board{}}, win{SjakkWindow{}}
 {}
 
+void print8x8arr(const int (&arr)[8][8]){
+    for(int y = 0; y < 8; y++){
+        for(int x = 0; x < 8; x++){
+            cout << arr[x][y] << '\t';
+        }
+        cout << endl;
+    }
+    cout << endl;
+}
+
+
 void Game::updateTimes(){
     if(board.turn==1){
         whiteTime -= 17;
@@ -43,82 +54,93 @@ void Game::forwardMove(){
 }
 
 
-// vector<TDT4102::Point> Game::getLegalMoves(TDT4102::Point activeSquare){
-//     //Henter alle pseudolovlige trekk til brikken
-//     vector<TDT4102::Point> pseudoLegalMoves = board.the_board[activeSquare.x][activeSquare.y]->getLegalMoves(board.map, activeSquare);
-//     int color = board.the_board[activeSquare.x][activeSquare.y]->side;
-//     vector<TDT4102::Point>legalMoves;
+vector<TDT4102::Point> Game::getLegalMoves(TDT4102::Point activeSquare){
+    //Henter alle pseudolovlige trekk til brikken
+    vector<TDT4102::Point> pseudoLegalMoves = board.the_board[activeSquare.x][activeSquare.y]->getLegalMoves(board.map, activeSquare);
+    int color = board.the_board[activeSquare.x][activeSquare.y]->side;
+    vector<TDT4102::Point>legalMoves;
 
-//     //Lage en kopi av brettet i funksjonen. tror det er her det blir noe feil?
-//     Board tempBoard{};
-//     for(int y = 0; y < 8; y++){
-//         for(int x = 0; x < 8; x++){
-//             if(board.the_board[x][y] == nullptr){
-//                 tempBoard.the_board[x][y] = nullptr;
-//                 cout << 0 << '\t';
-//             }
-//             else if(board.the_board[x][y]->getPieceType() == 1){
-//                 tempBoard.the_board[x][y] = new Pawn(board.the_board[x][y]->side);
-//                 cout << tempBoard.the_board[x][y]->getPieceType()*tempBoard.the_board[x][y]->side << '\t';
-//             }
-//             else if(board.the_board[x][y]->getPieceType() == 3){
-//                 tempBoard.the_board[x][y] = new Horse(board.the_board[x][y]->side);
-//                 cout << tempBoard.the_board[x][y]->getPieceType()*tempBoard.the_board[x][y]->side << '\t';
-//             }
-//             else if(board.the_board[x][y]->getPieceType() == 4){
-//                 tempBoard.the_board[x][y] = new Bishop(board.the_board[x][y]->side);
-//                 cout << tempBoard.the_board[x][y]->getPieceType()*tempBoard.the_board[x][y]->side << '\t';
-//             }
-//             else if(board.the_board[x][y]->getPieceType() == 5){
-//                 tempBoard.the_board[x][y] = new Rook(board.the_board[x][y]->side);
-//                 cout << tempBoard.the_board[x][y]->getPieceType()*tempBoard.the_board[x][y]->side << '\t';
-//             }
-//             else if(board.the_board[x][y]->getPieceType() == 9){
-//                 tempBoard.the_board[x][y] = new Queen(board.the_board[x][y]->side);
-//                 cout << tempBoard.the_board[x][y]->getPieceType()*tempBoard.the_board[x][y]->side << '\t';
-//             }
-//             else if(board.the_board[x][y]->getPieceType() == 10){
-//                 tempBoard.the_board[x][y] = new King(board.the_board[x][y]->side);
-//                 cout << tempBoard.the_board[x][y]->getPieceType()*tempBoard.the_board[x][y]->side << '\t';
-//             }
-//             else{
-//                 tempBoard.the_board[x][y] = nullptr;
-//                 cout << 0 << '\t';
-//             }
-//         }
-//         cout << endl;
-//     }
+    //Lage en kopi av brettet i funksjonen. tror det er her det blir noe feil?
+    Board tempBoard{};
+    tempBoard.turn = board.turn;
+    for(int y = 0; y < 8; y++){
+        for(int x = 0; x < 8; x++){
+            //tempBoard.the_board[x][y] = board.the_board[x][y];
+            if(board.the_board[x][y] == nullptr){
+                tempBoard.the_board[x][y] = nullptr;
+                //cout << 0 << '\t';
+            }
+            else if(board.the_board[x][y]->getPieceType() == 1){
+                tempBoard.the_board[x][y] = new Pawn(board.the_board[x][y]->side);
+                //cout << tempBoard.the_board[x][y]->getPieceType()*tempBoard.the_board[x][y]->side << '\t';
+            }
+            else if(board.the_board[x][y]->getPieceType() == 3){
+                tempBoard.the_board[x][y] = new Horse(board.the_board[x][y]->side);
+                //cout << tempBoard.the_board[x][y]->getPieceType()*tempBoard.the_board[x][y]->side << '\t';
+            }
+            else if(board.the_board[x][y]->getPieceType() == 4){
+                tempBoard.the_board[x][y] = new Bishop(board.the_board[x][y]->side);
+                //cout << tempBoard.the_board[x][y]->getPieceType()*tempBoard.the_board[x][y]->side << '\t';
+            }
+            else if(board.the_board[x][y]->getPieceType() == 5){
+                tempBoard.the_board[x][y] = new Rook(board.the_board[x][y]->side);
+                //cout << tempBoard.the_board[x][y]->getPieceType()*tempBoard.the_board[x][y]->side << '\t';
+            }
+            else if(board.the_board[x][y]->getPieceType() == 9){
+                tempBoard.the_board[x][y] = new Queen(board.the_board[x][y]->side);
+                //cout << tempBoard.the_board[x][y]->getPieceType()*tempBoard.the_board[x][y]->side << '\t';
+            }
+            else if(board.the_board[x][y]->getPieceType() == 10){
+                tempBoard.the_board[x][y] = new King(board.the_board[x][y]->side);
+                //cout << tempBoard.the_board[x][y]->getPieceType()*tempBoard.the_board[x][y]->side << '\t';
+            }
+            else{
+                tempBoard.the_board[x][y] = nullptr;
+                //cout << 0 << '\t';
+            }
+        }
+        //cout << endl;
+    }
 
     
 
-//     //ser på brikken vi skal sjekke
-//     Piece* piece = tempBoard.the_board[activeSquare.x][activeSquare.y];
-//     //om det ikke er en brikke return tom vektor
-//     if(piece == nullptr){return pseudoLegalMoves;}
+    //ser på brikken vi skal sjekke
+    Piece* piece = tempBoard.the_board[activeSquare.x][activeSquare.y];
+    //om det ikke er en brikke return tom vektor
+    if(piece == nullptr){return pseudoLegalMoves;}
 
-//     for(const auto& move : pseudoLegalMoves){
-//         tempBoard.Move(activeSquare, move);
-//         if(!tempBoard.isInCheck(color)){
-//             legalMoves.push_back(move);
-//         }
-//         tempBoard.Move(move, activeSquare);
-//     }
 
-//     //Slette kopien til Board
-//     for(int y = 0; y < 8; y++){
-//         for(int x = 0; x < 8; x++){
-//             delete tempBoard.the_board[x][y];
-//         }
-//     }       
+
+    for(int i = 0; i < pseudoLegalMoves.size(); i++){
+        tempBoard.generateMap();
+            //returnerer bare true på firkanter 1 unna brikka
+        if(tempBoard.TryToMove(activeSquare,pseudoLegalMoves.at(i))){
+
+            
+            //print8x8arr(tempBoard.map);
+            tempBoard.Move(activeSquare, pseudoLegalMoves.at(i));
+            tempBoard.generateMap();
+
+                
+            if(!tempBoard.isInCheck(color)){
+                legalMoves.push_back(pseudoLegalMoves.at(i));
+            }
+
+            tempBoard.Move(pseudoLegalMoves.at(i), activeSquare);
+        }
+    }
+
+    //tempboard slettes av seg selv når man går ut av funksjonen    
     
-//     return legalMoves;
-// }
+    return legalMoves;
+}
 
 void Game::playGame(){
     //selve spillet
     TDT4102::Point activeSquare(8,8);
     TDT4102::Point moveTo(8,8);
     vector<TDT4102::Point> legalMoves;
+    vector<TDT4102::Point> legalMovescheck;
 
 
     bool prevMouseClick = false;
@@ -135,7 +157,8 @@ void Game::playGame(){
         //Faktisk tegne spillet
         board.generateMap();
         win.drawBoard();
-        win.drawLegalMoves(legalMoves);
+        win.drawLegalMoves(legalMovescheck);
+        //win.drawLegalMoves(legalMoves);
         win.drawPieces(board.map);
         win.drawAroundActivePiece(activeSquare);
 
@@ -156,7 +179,10 @@ void Game::playGame(){
             }
             else if(mouseCord.x > 7 or mouseCord.y > 7){}
             //Sjekker om man flyttet til et lovlig sted
+
             else if(board.TryToMove(activeSquare, mouseCord)){
+                
+
                 //Legg til move i history
                 history.push_back(vector{activeSquare, mouseCord});
                 captureHistory.push_back(board.pieceAt(mouseCord));
@@ -180,7 +206,9 @@ void Game::playGame(){
             else{
                 //Bytter aktivert brikke
                 activeSquare = mouseCord;
+                
                 //legalMoves = getLegalMoves(activeSquare);
+                legalMovescheck = getLegalMoves(activeSquare);
                 legalMoves = board.the_board[activeSquare.x][activeSquare.y]->getLegalMoves(board.map, activeSquare); //getLegalMoves(activeSquare);    
             }
         }

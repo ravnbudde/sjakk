@@ -26,7 +26,10 @@ public:
     SjakkWindow win;
     void playGame();
     void updateTimes();
-    //vector<TDT4102::Point> getLegalMoves(TDT4102::Point activeSquare);
+    vector<TDT4102::Point> getLegalMoves(TDT4102::Point activeSquare);
 
 
 };
+
+
+void print8x8arr(const int (&arr)[8][8]);

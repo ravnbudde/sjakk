@@ -7,7 +7,7 @@ Horse::Horse(int side): Piece(side)
 int Horse::getPieceType() const {
     return 3;
 }
-vector<TDT4102::Point> Horse::getLegalMoves(int (&map)[8][8], TDT4102::Point from) {
+vector<TDT4102::Point> Horse::getLegalMoves(const int (&map)[8][8], TDT4102::Point from) {
     vector<TDT4102::Point> moves;
     TDT4102::Point move;
     int dy = 2;
