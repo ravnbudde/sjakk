@@ -104,127 +104,21 @@ void SjakkWindow::drawForward(){
     draw_rectangle({int(10*padX-0.9*padX), int(2*padY+0.4*padY)}, 0.6*padX, 0.2*padY, TDT4102::Color::black);
 }
 
-// void SjakkWindow::movepiece() {
-//     while(!should_close()){
-//         generateMap(map);
-//         drawBoard();
-//         drawPieces();
-//         Point mouseCord = get_mouse_coordinates();
-//         bool mouseClick = is_left_mouse_button_down();
-//         bool wasMoveLegal = false;
 
-        
+void SjakkWindow::drawLastMove(TDT4102::Point from, TDT4102::Point to){
+    TDT4102::Color darkColor(228, 167, 31);
+    TDT4102::Color lightColor(255, 192, 66);
+    if((from.x+from.y)%2 == 0){
+        draw_rectangle({from.x*padX, from.y*padY}, padX, padY, lightColor);
+    }
+    else{
+        draw_rectangle({from.x*padX, from.y*padY}, padX, padY, darkColor);
+    }
 
-
-//         for(int i = 0; i < pieces.size(); i++){
-//             int pcx = pieces[i]->coordinate.x;
-//             int pcy = pieces[i]->coordinate.y;
-//             if(mouseClick and (mouseCord.x > (pcx*padX-5)) and (mouseCord.x < (pcx*padX + padX+5)) and (mouseCord.y > pcy*padY-5) and (mouseCord.y < (pcy*padY + padY+5))){
-//                 pieces[i]->isActive = true;
-//                 bool castleL = false;
-//                 int indexCastleL;
-//                 bool castleR = false;
-//                 int indexCastleR;
-//                 vector<TDT4102::Point> legalMoves = pieces[i]->getLegalMoves(map);
-
-//                 sjekker om du kan castle
-//                 if(pieces[i]->getPieceType()==10 and pieces[i]->virginMove){
-//                     castleL = castleLeft(i);
-//                     castleR = castleRight(i);
-//                 }
-//                 TDT4102::Point castleCord;
-//                 if(castleL){
-//                     castleCord.x = pieces[i]->coordinate.x - 2;
-//                     castleCord.y = pieces[i]->coordinate.y;
-//                     legalMoves.push_back(castleCord);
-//                     for(int j = 0; j < pieces.size(); j++){
-//                         if(pieces[j]->getPieceType() == 5 and pieces[j]->coordinate.x == pieces[i]->coordinate.x-4 and pieces[j]->coordinate.y == pieces[i]->coordinate.y){
-//                             indexCastleL = j;
-//                         }
-//                     }
-//                 }
-//                 if(castleR){
-//                     castleCord.x = pieces[i]->coordinate.x + 2;
-//                     castleCord.y = pieces[i]->coordinate.y;
-//                     legalMoves.push_back(castleCord);
-//                     for(int j = 0; j < pieces.size(); j++){
-//                         if(pieces[j]->getPieceType() == 5 and pieces[j]->coordinate.x == pieces[i]->coordinate.x+3 and pieces[j]->coordinate.y == pieces[i]->coordinate.y){
-//                             indexCastleR = j;
-//                         }
-//                     }
-//                 }
-
-
-                
-//                 logikk om brikke er trykket på
-//                 while(!is_right_mouse_button_down()){
-//                     drawBoard();
-//                     drawAroundActivePiece(pcx, pcy); 
-//                     drawLegalMoves(legalMoves);
-//                     drawPieces();
-//                     mouseCord = get_mouse_coordinates();
-//                     pieces[i]->coordinate.x = mouseCord.x/padX;
-//                     pieces[i]->coordinate.y = mouseCord.y/padY;
-//                     next_frame();
-//                 }
-//                 pieces[i]->isActive = false;
-
-
-//                 Sjekker om trekket var lovlig
-//                 Setter wasMoveLegal til true om det var lovlig
-//                 for(const auto& move : legalMoves){
-//                     if(pieces[i]->coordinate.x == move.x and pieces[i]->coordinate.y == move.y){
-//                         wasMoveLegal = true;
-//                         om det var første trekk er ikke de neste et
-//                         if(pieces[i]->virginMove){
-//                             pieces[i]->virginMove = false;
-//                         }
-//                         break;
-//                     }
-//                 }
-//                 Resetter pos til piece om ikke
-//                 if(!wasMoveLegal){
-//                     pieces[i]->coordinate.x = pcx;
-//                     pieces[i]->coordinate.y = pcy;
-//                 }
-//                 else{wasMoveLegal = false;}
-
-//                 om castle
-//                 if(castleL and (pieces[indexCastleL]->coordinate.x-pieces[i]->coordinate.x) == -2){
-//                     pieces[indexCastleL]->coordinate.x += 3;
-//                 }
-//                 else if(castleR and (pieces[indexCastleR]->coordinate.x-pieces[i]->coordinate.x == 1)){
-//                     pieces[indexCastleR]->coordinate.x -= 2;
-//                 }
-
-//                 Fikser om en brikke blir tatt
-//                 for(int j = 0; j < pieces.size(); j++){
-//                     if((pieces[i]->coordinate.x == pieces[j]->coordinate.x) and (pieces[i]->coordinate.y == pieces[j]->coordinate.y) and (i != j)){
-//                         delete pieces[j];
-//                         pieces.erase(pieces.begin()+j);
-//                         break;
-//                     }
-//                 }
-
-
-//                 Fikser om det er promotion
-//                 if(pieces[i]->getPieceType() == 1){
-//                     if(pieces[i]->side == 1 and pieces[i]->coordinate.y == 0){
-//                         promotion(i);
-//                     }
-//                     else if(pieces[i]->side == -1 and pieces[i]->coordinate.y == 7){
-//                         promotion(i);
-//                     }
-//                 }
-
-//             }
-//         }
-
-        
-//         next_frame();
-//     }
-// }
-
-
-
-
+    if((to.x+to.y)%2 == 0){
+        draw_rectangle({to.x*padX, to.y*padY}, padX, padY, lightColor);
+    }
+    else{
+        draw_rectangle({to.x*padX, to.y*padY}, padX, padY, darkColor);
+    }
+}

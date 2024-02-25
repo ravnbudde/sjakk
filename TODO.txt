@@ -1,6 +1,4 @@
 
-Tegn noe farge på brettet for brikken som sist ble flytta(fra-til)
-
 Fiks for en-passant
 Fiks history for en-passant 
 

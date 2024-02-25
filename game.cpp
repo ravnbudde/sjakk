@@ -85,6 +85,9 @@ void Game::playGame(){
         //Faktisk tegne spillet
         board.generateMap();
         win.drawBoard();
+        if(history.size() > 0){
+            win.drawLastMove(history.back().at(0), history.back().at(1));
+        }
         win.drawLegalMoves(legalMoves);
         //win.drawLegalMoves(legalMoves);
         win.drawPieces(board.map);
