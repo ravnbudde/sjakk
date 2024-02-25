@@ -24,10 +24,11 @@ public:
     void PlacePieceAt(Piece* piece, TDT4102::Point point);
     void Move(TDT4102::Point from, TDT4102::Point to); 
     bool TryToMove(TDT4102::Point from, TDT4102::Point to) const;
+    bool TryToMoveFiltered(TDT4102::Point from, TDT4102::Point to) const;
     TDT4102::Point GetEnPassant();
     int turn;
     bool isInCheck(int side) const;
-        vector<TDT4102::Point> filterLegalMoves(TDT4102::Point activeSquare);
+    vector<TDT4102::Point> filterLegalMoves(TDT4102::Point activeSquare) const;
 
 
 

@@ -95,17 +95,41 @@ void Board::Move(TDT4102::Point from, TDT4102::Point to){
 }
 
 bool Board::TryToMove(TDT4102::Point from, TDT4102::Point to) const{
+    //om trekkene er utenfor brettet
     if(0 > from.x or from.x > 7 or 0 > from.y or from.y > 7 or 0 > to.x or to.x > 7 or 0 > to.y or to.y > 7){return false;}
     Piece* piece = the_board[from.x][from.y];
     //Retrun false om du flytter et tomt felt
     if(piece == nullptr){return false;}
     //Sjekker at det er 'din' tur
     if(piece->side != turn){return false;}
-    //om trekkene er utenfor brettet
+    
     
 
     //Sjekker om trekket er lovlig;
     vector<TDT4102::Point> legalMoves = piece->getLegalMoves(map, from);
+    for(TDT4102::Point point : legalMoves){
+        if(point.x == to.x and point.y == to.y){
+            return true;
+        }
+    }
+
+    return false;
+
+}
+
+bool Board::TryToMoveFiltered(TDT4102::Point from, TDT4102::Point to) const{
+    //om trekkene er utenfor brettet
+    if(0 > from.x or from.x > 7 or 0 > from.y or from.y > 7 or 0 > to.x or to.x > 7 or 0 > to.y or to.y > 7){return false;}
+    Piece* piece = the_board[from.x][from.y];
+    //Retrun false om du flytter et tomt felt
+    if(piece == nullptr){return false;}
+    //Sjekker at det er 'din' tur
+    if(piece->side != turn){return false;}
+    
+    
+
+    //Sjekker om trekket er lovlig;
+    vector<TDT4102::Point> legalMoves = filterLegalMoves(from);
     for(TDT4102::Point point : legalMoves){
         if(point.x == to.x and point.y == to.y){
             return true;
@@ -131,18 +155,6 @@ bool Board::isInCheck(int side) const{
         }
     }
 
-    // for(int y = 0; y < 8; y++){
-    //     for(int x = 0; x < 8; x++){
-    //         if(the_board[x][y] == nullptr){
-    //             cout << 0 << '\t';
-    //         }
-    //         else{cout << the_board[x][y]->getPieceType()*the_board[x][y]->side << '\t';}
-    //     }
-    //     cout << endl;
-    // }
-    cout << endl << endl;
-
-    //cout << kingCord.x << ", " << kingCord.y << endl;
     for(int y = 0; y < 8; y++){
         for(int x = 0; x < 8; x++){
             Piece* tempPiece = the_board[x][y];
@@ -172,7 +184,7 @@ TDT4102::Point Board::GetEnPassant(){
     return en_passant;
 }
 
-vector<TDT4102::Point> Board::filterLegalMoves(TDT4102::Point activeSquare){
+vector<TDT4102::Point> Board::filterLegalMoves(TDT4102::Point activeSquare) const{
     //Henter alle pseudolovlige trekk til brikken
     vector<TDT4102::Point> pseudoLegalMoves = the_board[activeSquare.x][activeSquare.y]->getLegalMoves(map, activeSquare);
     int color = the_board[activeSquare.x][activeSquare.y]->side;
