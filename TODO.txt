@@ -1,5 +1,5 @@
 
-Fiks for en-passant
+Fiks for en-passant - kan gå skrå, må bare fikse at de blir tatt
 Fiks history for en-passant 
 
 

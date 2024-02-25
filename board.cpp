@@ -72,12 +72,12 @@ void Board::Move(TDT4102::Point from, TDT4102::Point to){
         return;
     //Sjekker om det er en pawn sitt første trekk, og det skal være lovlig med en passant
     if(the_board[from.x][from.y]->getPieceType() == 1 and abs(from.y - to.y) == 2){
-        if(from.x == 1){
-            TDT4102::Point ep(from.x,from.y+1);
+        if(turn == 1){
+            TDT4102::Point ep(from.x,from.y-1);
             en_passant = ep;
         }
         else{
-            TDT4102::Point ep(from.x,from.y-1);
+            TDT4102::Point ep(from.x,from.y+1);
             en_passant = ep;
         }
     }
@@ -107,6 +107,10 @@ bool Board::TryToMove(TDT4102::Point from, TDT4102::Point to) const{
 
     //Sjekker om trekket er lovlig;
     vector<TDT4102::Point> legalMoves = piece->getLegalMoves(map, from);
+    if(checkEnPassant(from)){
+        legalMoves.push_back(GetEnPassant());
+    }
+
     for(TDT4102::Point point : legalMoves){
         if(point.x == to.x and point.y == to.y){
             return true;
@@ -180,7 +184,7 @@ void Board::PlacePieceAt(Piece* piece, TDT4102::Point point){
     the_board[point.x][point.y] = piece;
 }
 
-TDT4102::Point Board::GetEnPassant(){
+TDT4102::Point Board::GetEnPassant() const{
     return en_passant;
 }
 
@@ -239,7 +243,13 @@ vector<TDT4102::Point> Board::filterLegalMoves(TDT4102::Point activeSquare) cons
     //om det ikke er en brikke return tom vektor
     if(piece == nullptr){return pseudoLegalMoves;}
 
-
+    //sjekker om en-passant er relevant
+    if(checkEnPassant(activeSquare)){
+        cout << TryToMove(activeSquare, GetEnPassant()) << endl;
+        if(TryToMove(activeSquare, GetEnPassant())){
+            legalMoves.push_back(GetEnPassant());
+        }
+    }
 
     for(int i = 0; i < pseudoLegalMoves.size(); i++){
         tempBoard.generateMap();
@@ -260,8 +270,19 @@ vector<TDT4102::Point> Board::filterLegalMoves(TDT4102::Point activeSquare) cons
         }
     }
 
-    //tempboard slettes av seg selv når man går ut av funksjonen    
-    
+    //tempboard slettes av seg selv når man går ut av funksjonen       
     return legalMoves;
+}
+
+bool Board::checkEnPassant(TDT4102::Point activeSquare) const{
+    //om bonden man ser på er for lang unna uansett return tom
+    if(the_board[activeSquare.x][activeSquare.y]->getPieceType()==1 and en_passant.x !=0){
+        if((activeSquare.y-en_passant.y)*turn != 1 or abs(activeSquare.x-en_passant.x)*turn != 1){
+            return false;
+        }
+
+        return true;
+    }
+    return false;
 }
 
