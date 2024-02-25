@@ -17,6 +17,7 @@ private:
     vector<Piece*> captureForwardHistory;
     void undoMove();
     void forwardMove();
+    void clearActiveSquare();
     
 
 
@@ -26,6 +27,10 @@ public:
     SjakkWindow win;
     void playGame();
     void updateTimes();
+
+    TDT4102::Point activeSquare;
+    TDT4102::Point moveTo;
+    vector<TDT4102::Point> legalMoves;
     
 
 };

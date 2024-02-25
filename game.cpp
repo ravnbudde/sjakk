@@ -23,8 +23,13 @@ void Game::updateTimes(){
     }
 }
 
+void Game::clearActiveSquare(){
+    activeSquare = TDT4102::Point(8,8);
+    legalMoves.clear();
+}
+
 void Game::undoMove(){
-    int lastMoveIndex = history.size()-1;
+    __SIZE_TYPE__ lastMoveIndex = history.size()-1;
 
     Point movedFrom = history.at(lastMoveIndex).at(0);
     Point movedTo = history.at(lastMoveIndex).at(1);
@@ -33,13 +38,15 @@ void Game::undoMove(){
     board.PlacePieceAt(captureHistory.at(captureHistory.size()-1), movedTo);
 
     forwardHistory.push_back(history.at(lastMoveIndex));
-    history.erase(history.begin()+lastMoveIndex);
+    history.pop_back();
+    //history.erase(history.begin()+lastMoveIndex);
     captureForwardHistory.push_back(captureHistory.at(lastMoveIndex));
-    captureHistory.erase(captureHistory.begin()+lastMoveIndex);
+    captureHistory.pop_back();
+    //captureHistory.erase(captureHistory.begin()+lastMoveIndex);
 }
 
 void Game::forwardMove(){
-    int moveIndex = forwardHistory.size()-1;
+    __SIZE_TYPE__ moveIndex = forwardHistory.size()-1;
 
     TDT4102::Point movedFrom = forwardHistory.at(moveIndex).at(0); 
     TDT4102::Point movedTo = forwardHistory.at(moveIndex).at(1);
@@ -48,19 +55,19 @@ void Game::forwardMove(){
     //board.PlacePieceAt(captureForwardHistory.at(moveIndex), movedFrom);
 
     history.push_back(forwardHistory.at(moveIndex));
-    forwardHistory.erase(history.begin()+moveIndex);
+    forwardHistory.pop_back();
+    //forwardHistory.erase(history.begin()+moveIndex);
     captureHistory.push_back(captureForwardHistory.at(moveIndex));
-    captureForwardHistory.erase(captureForwardHistory.begin()+moveIndex);
+    captureForwardHistory.pop_back();
+    //captureForwardHistory.erase(captureForwardHistory.begin()+moveIndex);
 }
 
 
 
 void Game::playGame(){
     //selve spillet
-    TDT4102::Point activeSquare(8,8);
-    TDT4102::Point moveTo(8,8);
-    vector<TDT4102::Point> legalMoves;
-    //vector<TDT4102::Point> legalMovescheck;
+    activeSquare = TDT4102::Point(8,8);
+    moveTo = TDT4102::Point(8,8);
 
 
     bool prevMouseClick = false;
@@ -93,17 +100,17 @@ void Game::playGame(){
             //Sjekker om undoMove
             if(isHistory and mouseCord.x > 7 and mouseCord.x < 9 and mouseCord.y > 1 and mouseCord.y < 3){
                 undoMove();
+                clearActiveSquare();
             }
             //Sjekker om ForwardMove
             if(isForwardHistory and mouseCord.x > 8 and mouseCord.x < 10 and mouseCord.y > 1 and mouseCord.y < 3){
                 forwardMove();
+                clearActiveSquare();
             }
             else if(mouseCord.x > 7 or mouseCord.y > 7){}
             //Sjekker om man flyttet til et lovlig sted
 
             else if(board.TryToMove(activeSquare, mouseCord)){
-                
-
                 //Legg til move i history
                 history.push_back(vector{activeSquare, mouseCord});
                 captureHistory.push_back(board.pieceAt(mouseCord));
@@ -114,24 +121,16 @@ void Game::playGame(){
                 board.Move(activeSquare, mouseCord);
                 //Stopp å vise lovlige trekk osv
                 moveTo = mouseCord;
-                activeSquare = TDT4102::Point(8,8);
-                legalMoves.clear();
-                //cout << true << endl;
-                cout << board.isInCheck(board.the_board[mouseCord.x][mouseCord.y]->side*(-1)) << endl;
+                clearActiveSquare();
             }
-            else if(board.map[mouseCord.x][mouseCord.y] == 0){
-                //Stopp å vise lovlige trekk osv..
-                activeSquare = TDT4102::Point(8,8);
-                legalMoves.clear();
-            }
+            else if(board.map[mouseCord.x][mouseCord.y] == 0){}
             else{
                 //Bytter aktivert brikke
                 activeSquare = mouseCord;
                 
                 legalMoves = board.filterLegalMoves(activeSquare);
-                //legalMovescheck = getLegalMoves(activeSquare);
-                //legalMoves = board.the_board[activeSquare.x][activeSquare.y]->getLegalMoves(board.map, activeSquare); //getLegalMoves(activeSquare);    
             }
+            
         }
         prevMouseClick = currentMouseClick;
 

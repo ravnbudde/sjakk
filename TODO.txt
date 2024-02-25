@@ -1,0 +1,8 @@
+
+Gå fram i history krasjer om hvit var den siste som flytta,
+men ikke om man har gått fram/tilbake tidligere mens sort var siste som flytta? noen ganger
+skjønner ikke i det hele tatt når/hvorfor den krasjer. virker ulikt fra hver kompilering
+akkuratt samme trekk som funker en runde funker ikke en annen...
+Må være noe feil som skjer under typekonversionene
+
+
