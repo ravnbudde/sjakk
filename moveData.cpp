@@ -2,9 +2,18 @@
 
 
 MoveData::MoveData(string FEN, TDT4102::Point from, TDT4102::Point to, MoveType moveType): 
-FEN{FEN}, from{pointToCord(from)}, to{pointToCord(to)}, moveType{MoveType::NORMAL}
+FEN{FEN}, from{pointToCord(from)}, to{pointToCord(to)}, moveType{moveType}
 {}
 
 MoveData::MoveData(string FEN, TDT4102::Point from, TDT4102::Point to, const char capturedPiece, MoveType moveType):
-FEN{FEN}, from{pointToCord(from)}, to{pointToCord(to)}, capturedPiece{capturedPiece}, moveType{MoveType::CAPTURE}
-{}
+FEN{FEN}, from{pointToCord(from)}, to{pointToCord(to)}, capturedPiece{capturedPiece}, moveType{moveType}
+{
+    if(moveType == MoveType::ENPASSANT){
+        
+        capturedPawnCord = getEPfromFEN(FEN);
+        cout << "Ble lagd enpassant movetype med cord "<<capturedPawnCord << endl;
+        // cout << "Og piecetype: " << capturedPiece << endl;
+    }
+    else{cout << "ble lagd en capture movetype som tar en " << capturedPiece << endl;}
+}
+

@@ -97,4 +97,5 @@ string pointToCord(const TDT4102::Point &point);
 TDT4102::Point cordToPoint(const string &cord);
 
 
-
+//FEN hjelpefunksjoner
+const string getEPfromFEN(const string &FEN);

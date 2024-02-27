@@ -1,6 +1,10 @@
 
-Fiks for en-passant - kan gå skrå, må bare fikse at de blir tatt
-Fiks history for en-passant
+Om en side flytter en bonde to fram, men trekker tilbake trekket, kan de nå ta sin egen side med En-Passant !!
+fiksa den første men fjerner den ikke noten siden føler det egentlig burde vert lov. gir mening.
+
+
+Fiks for castle king og queen side 
+Fiks history for castle
 
 samme som over men for resten av movetypes
 

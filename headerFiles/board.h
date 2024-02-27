@@ -13,7 +13,6 @@
 
 class Board {
 private:
-    TDT4102::Point en_passant;
     void BoardNewSetup();
 
 
@@ -26,6 +25,7 @@ public:
     void Move(TDT4102::Point from, TDT4102::Point to); 
     bool TryToMove(TDT4102::Point from, TDT4102::Point to) const;
     bool TryToMoveFiltered(TDT4102::Point from, TDT4102::Point to) const;
+    TDT4102::Point en_passant;
     TDT4102::Point GetEnPassant() const;
     int turn;
     bool isInCheck(int side) const;

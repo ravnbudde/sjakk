@@ -45,3 +45,26 @@ TDT4102::Point cordToPoint(const string &cord){
 }
 
 
+
+
+const string getEPfromFEN(const string &FEN){
+    int indexCount = 0;
+    const char whitespace = ' ';
+    string output = "";
+    for(int i = 0; i < FEN.length(); i++){
+        if(FEN[i] == whitespace){
+            indexCount += 1;
+            if(indexCount == 4){
+                if(output[1] == '6'){output[1] = '5';}
+                else if(output[1] == '3'){output[1] = '4';}
+                return output;
+            }
+            output = "";
+        }
+        else{
+            output += FEN[i];
+        }
+    }
+    return "Didnt find en_passant element in FEN";
+}
+

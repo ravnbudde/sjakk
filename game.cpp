@@ -146,39 +146,68 @@ void Game::generateFEN(){
     //Fiks med castle her
     FEN += " KQkq";
     //En Passant
-    if(board.GetEnPassant().x != NULL and board.GetEnPassant().y != NULL){
+    if(board.GetEnPassant().y != NULL){
         FEN += " " + pointToCord(board.GetEnPassant());
     }
     else{
         FEN += " -";
     }
-    if(history.back().moveType == MoveType::CAPTURE or history.back().moveType == MoveType::PAWNPUSH){
+    const auto& mt = history.back().moveType;
+    if(mt == MoveType::CAPTURE or mt == MoveType::PAWNPUSH){
         FEN += " 0";
         halfMoves = 0;
     }
     else{
-        FEN += " " + to_string(halfMoves);
         halfMoves += 1;
+        FEN += " " + to_string(halfMoves);
     }
 }
 
+
+
+
 void Game::undoMove(){
-    Point movedFrom = cordToPoint(history.back().from);
-    Point movedTo = cordToPoint(history.back().to);
+    TDT4102::Point movedFrom = cordToPoint(history.back().from);
+    TDT4102::Point movedTo = cordToPoint(history.back().to);
     char capturedPiece = history.back().capturedPiece;
+    MoveType moveType = history.back().moveType;
+    TDT4102::Point capturedCord;
+    if(moveType == MoveType::CAPTURE){
+        capturedCord = movedTo; 
+    }
+    else if(moveType == MoveType::ENPASSANT){
+        capturedCord = cordToPoint(history.back().capturedPawnCord);
+    }
+
+    board.Move(movedTo, movedFrom);
+    board.en_passant = TDT4102::Point(0,0);//hvis denne ikke er her er En-Passant mot seg selv lov
+
+    if(moveType == MoveType::CAPTURE or moveType == MoveType::ENPASSANT){
+        board.PlacePieceAt(capturedPiece, capturedCord); 
+    }
 
     forwardHistory.push_back(history.back());
     history.pop_back();
-
-    board.Move(movedTo, movedFrom);
-    board.PlacePieceAt(capturedPiece, movedTo);  
 }
 
 void Game::forwardMove(){
     TDT4102::Point movedFrom = cordToPoint(forwardHistory.back().from); 
     TDT4102::Point movedTo = cordToPoint(forwardHistory.back().to);
-    //Sletter brikken som blir tatt
-    delete board.the_board[movedTo.x][movedTo.y];
+    MoveType moveType = forwardHistory.back().moveType;
+    TDT4102::Point capturedCord;    
+
+    if(moveType == MoveType::CAPTURE){
+        capturedCord = movedTo; 
+    }
+    else if(moveType == MoveType::ENPASSANT){
+        capturedCord = cordToPoint(forwardHistory.back().capturedPawnCord);
+    }
+
+    if(moveType == MoveType::CAPTURE or moveType == MoveType::ENPASSANT){
+        delete board.the_board[capturedCord.x][capturedCord.y];
+        board.the_board[capturedCord.x][capturedCord.y] = nullptr;
+    }
+    
 
     history.push_back(forwardHistory.back());
     forwardHistory.pop_back();
@@ -239,10 +268,19 @@ void Game::playGame(){
 
             else if(board.TryToMove(activeSquare, mouseCord)){
                 //Legg til move i history
-                // if(board.the_board[activeSquare.x][activeSquare.y]->getPieceType() == 1 and board.turn*(mouseCord.y-activeSquare.y)==2){
-                //     MoveData theMove(MoveType::)
-                // }
-                if(board.the_board[mouseCord.x][mouseCord.y] != nullptr){
+                if(board.the_board[activeSquare.x][activeSquare.y]->getPieceType() == 1 and abs(mouseCord.x-activeSquare.x)==1 and board.GetEnPassant().y == mouseCord.y){
+                    MoveData theMove(FEN, activeSquare, mouseCord, intToPieceType(-board.turn), MoveType::ENPASSANT);
+                    history.push_back(theMove);
+                    TDT4102::Point capturedCord = cordToPoint(getEPfromFEN(FEN));
+                    cout << "EP capture square: " << getEPfromFEN(FEN) << endl;
+                    delete board.the_board[capturedCord.x][capturedCord.y];
+                    board.the_board[capturedCord.x][capturedCord.y] = nullptr;
+                }
+                else if(board.the_board[activeSquare.x][activeSquare.y]->getPieceType()== 1 and board.the_board[mouseCord.x][mouseCord.y] == nullptr){
+                    MoveData theMove(FEN, activeSquare, mouseCord, MoveType::PAWNPUSH);
+                    history.push_back(theMove);
+                }
+                else if(board.the_board[mouseCord.x][mouseCord.y] != nullptr){
                     char capturePiece = intToPieceType(-1*board.turn*board.the_board[mouseCord.x][mouseCord.y]->getPieceType());
                     MoveData theMove(FEN, activeSquare, mouseCord, capturePiece, MoveType::CAPTURE);
                     history.push_back(theMove);

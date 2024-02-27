@@ -71,7 +71,7 @@ void Board::Move(TDT4102::Point from, TDT4102::Point to){
     if(from.x > 7 or from.x<0 or from.y>7 or from.y<0 or to.x>7 or to.x<0 or to.y>7 or to.y<0)
         return;
     //Sjekker om det er en pawn sitt første trekk, og det skal være lovlig med en passant
-    if(the_board[from.x][from.y]->getPieceType() == 1 and abs(from.y - to.y) == 2){
+    if(abs(the_board[from.x][from.y]->getPieceType()) == 1 and abs(from.y - to.y) == 2){
         if(turn == 1){
             TDT4102::Point ep(from.x,from.y-1);
             en_passant = ep;
@@ -222,7 +222,7 @@ void Board::PlacePieceAt(const char piece, TDT4102::Point point){
     
     default:
         the_board[point.x][point.y] = nullptr;
-        cout << "Placed zeroptr in Board::PlacePieceAt" << endl;
+        //cout << "Placed zeroptr in Board::PlacePieceAt" << endl;
         break;
     } 
     return;
@@ -320,8 +320,8 @@ vector<TDT4102::Point> Board::filterLegalMoves(TDT4102::Point activeSquare) cons
 
 bool Board::checkEnPassant(TDT4102::Point activeSquare) const{
     //om bonden man ser på er for lang unna uansett return tom
-    if(the_board[activeSquare.x][activeSquare.y]->getPieceType()==1 and en_passant.x !=0){
-        if((activeSquare.y-en_passant.y)*turn != 1 or abs(activeSquare.x-en_passant.x)*turn != 1){
+    if(abs(the_board[activeSquare.x][activeSquare.y]->getPieceType())==1 and en_passant.y !=0){
+        if((activeSquare.y-en_passant.y)*turn != 1 or abs(activeSquare.x-en_passant.x) != 1){
             return false;
         }
 

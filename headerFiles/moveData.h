@@ -5,14 +5,16 @@
 
 class MoveData{
     public:
-    MoveData(string FEN, TDT4102::Point from, TDT4102::Point to, MoveType moveType = MoveType::NORMAL);
-    MoveData(string FEN, TDT4102::Point from, TDT4102::Point to, const char capturedPiece, MoveType moveType = MoveType::CAPTURE);
-
+    MoveData(string FEN, TDT4102::Point from, TDT4102::Point to, MoveType moveType);//Enten NORMAL eller PAWNPUSH
+    MoveData(string FEN, TDT4102::Point from, TDT4102::Point to, const char capturedPiece, MoveType moveType);//Enten CAPTURE eller ENPASSANT
+    
     const string FEN;
     MoveType moveType;
     const string from;
     const string to;
-    const char capturedPiece = NULL;
+
+    char capturedPiece = NULL;
+    string capturedPawnCord = "";
 
     private:
 
