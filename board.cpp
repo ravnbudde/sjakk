@@ -1,6 +1,6 @@
 #include "headerFiles/board.h"
 
-Board::Board(): en_passant{NULL}, turn{1} 
+Board::Board(): en_passant{TDT4102::Point(NULL, NULL)}, turn{1} 
 {BoardNewSetup();}
 
 Board::~Board()
@@ -180,8 +180,52 @@ Piece* Board::pieceAt(TDT4102::Point point){
     return the_board[point.x][point.y];
 }
 
-void Board::PlacePieceAt(Piece* piece, TDT4102::Point point){
-    the_board[point.x][point.y] = piece;
+void Board::PlacePieceAt(const char piece, TDT4102::Point point){
+    switch (piece)
+    {
+    case 'P':
+        the_board[point.x][point.y] = new Pawn(1);
+        break;
+    case 'H':
+        the_board[point.x][point.y] = new Horse(1);
+        break;
+    case 'B':
+        the_board[point.x][point.y] = new Bishop(1);
+        break;
+    case 'R':
+        the_board[point.x][point.y] = new Rook(1);
+        break;
+    case 'Q':
+        the_board[point.x][point.y] = new Queen(1);
+        break;
+    case 'K':
+        the_board[point.x][point.y] = new King(1);
+        break;
+    case 'p':
+        the_board[point.x][point.y] = new Pawn(-1);
+        break;
+    case 'h':
+        the_board[point.x][point.y] = new Horse(-1);
+        break;
+    case 'b':
+        the_board[point.x][point.y] = new Bishop(-1);
+        break;
+    case 'r':
+        the_board[point.x][point.y] = new Rook(-1);
+        break;
+    case 'q':
+        the_board[point.x][point.y] = new Queen(-1);
+        break;
+    case 'k':
+        the_board[point.x][point.y] = new King(-1);
+        break;   
+    
+    default:
+        the_board[point.x][point.y] = nullptr;
+        cout << "Placed zeroptr in Board::PlacePieceAt" << endl;
+        break;
+    } 
+    return;
 }
 
 TDT4102::Point Board::GetEnPassant() const{

@@ -22,7 +22,7 @@ class SjakkWindow : public AnimationWindow {
     void drawClock(int timeWhitems, int timeBlackms);
     void drawUndo();
     void drawForward();
-    void drawLastMove(TDT4102::Point from, TDT4102::Point to);
+    void drawLastMove(const string from, const string to);
 
 
     private:

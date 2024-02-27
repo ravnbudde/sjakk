@@ -1,5 +1,13 @@
 
 Fiks for en-passant - kan gå skrå, må bare fikse at de blir tatt
-Fiks history for en-passant 
+Fiks history for en-passant
+
+samme som over men for resten av movetypes
+
+
+
+
+
+
 
 

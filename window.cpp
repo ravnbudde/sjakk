@@ -39,6 +39,18 @@ void SjakkWindow::drawBoard() {
             }
         }
     }
+    for(int i = 0; i < 8; i++){
+        char letter = static_cast<char>(96+i);
+        if(i%2 == 0){
+            draw_text({-2*padX/100, i*padY+padY/100}, to_string(8-i), TDT4102::Color(175,144,117), 20, TDT4102::Font::courier_bold);
+            draw_text({i*padX-2*padX/10, 7*padY+75*padY/100}, to_string(letter), TDT4102::Color(175,144,117), 20, TDT4102::Font::courier_bold);
+        }
+        else{
+            draw_text({-2*padX/100, i*padY+padY/100}, to_string(8-i), TDT4102::Color(253, 238, 211), 20, TDT4102::Font::courier_bold);
+            draw_text({i*padX-2*padX/10, 7*padY+75*padY/100}, to_string(letter), TDT4102::Color(253, 238, 211), 20, TDT4102::Font::courier_bold);
+        }
+    }
+    //Gudene vet hvorfor h ikke kommer med i loopen over
 }
 
 void SjakkWindow::drawLegalMoves(vector<TDT4102::Point>& legalMoves) {
@@ -86,39 +98,41 @@ void SjakkWindow::drawClock(int timeWhitems, int timeBlackms){
     string blackTime = to_string(blackMinutes) + ":" + to_string(blackSeconds) + "." + to_string(blackDS); 
     //Tegner hvit tid
     draw_rectangle({8*padX, 1*padY}, 2*padX, padY, TDT4102::Color::white_smoke);
-    draw_text({8*padX, 1*padY}, whiteTime, TDT4102::Color::black, 75);
+    draw_text({8*padX, 1*padY}, whiteTime, TDT4102::Color::black, winW*75/1000);
     //Tegner sort tid
     draw_rectangle({8*padX, 0*padY}, 2*padX, 1*padY, TDT4102::Color::black);
-    draw_text({8*padX, 0*padY}, blackTime, TDT4102::Color::white, 75);
+    draw_text({8*padX, 0*padY}, blackTime, TDT4102::Color::white, winW*75/1000);
 }
 
 void SjakkWindow::drawUndo(){
     draw_rectangle({8*padX, 2*padY}, padX, padY, TDT4102::Color::gray, TDT4102::Color::black);
-    draw_triangle({int(8*padX+0.1*padX), int(2*padY+0.5*padY)}, {int(8*padX+0.3*padX), int(2*padY+0.7*padY)}, {int(8*padX+0.3*padX),int(2*padY+0.3*padY)}, TDT4102::Color::black);
-    draw_rectangle({int(8*padX+0.3*padX), int(2*padY+0.4*padY)}, 0.6*padX, 0.2*padY, TDT4102::Color::black);
+    draw_triangle({int(8*padX+padX/10), int(2*padY+5*padY/10)}, {int(8*padX+3*padX/10), int(2*padY+7*padY/10)}, {int(8*padX+3*padX/10),int(2*padY+3*padY/10)}, TDT4102::Color::black);
+    draw_rectangle({int(8*padX+3*padX/10), int(2*padY+4*padY/10)}, 6*padX/10, 2*padY/10, TDT4102::Color::black);
 }
 
 void SjakkWindow::drawForward(){
     draw_rectangle({9*padX, 2*padY}, padX, padY, TDT4102::Color::gray, TDT4102::Color::black);
-    draw_triangle({int(10*padX-0.1*padX), int(2*padY+0.5*padY)}, {int(10*padX-0.3*padX), int(2*padY+0.7*padY)}, {int(10*padX-0.3*padX),int(2*padY+0.3*padY)}, TDT4102::Color::black);
-    draw_rectangle({int(10*padX-0.9*padX), int(2*padY+0.4*padY)}, 0.6*padX, 0.2*padY, TDT4102::Color::black);
+    draw_triangle({int(10*padX-1*padX/10), int(2*padY+5*padY/10)}, {int(10*padX-3*padX/10), int(2*padY+7*padY/10)}, {int(10*padX-3*padX/10),int(2*padY+3*padY/10)}, TDT4102::Color::black);
+    draw_rectangle({int(10*padX-9*padX/10), int(2*padY+4*padY/10)}, 6*padX/10, 2*padY/10, TDT4102::Color::black);
 }
 
 
-void SjakkWindow::drawLastMove(TDT4102::Point from, TDT4102::Point to){
+void SjakkWindow::drawLastMove(const string from, const string to){
     TDT4102::Color darkColor(228, 167, 31);
     TDT4102::Color lightColor(255, 192, 66);
-    if((from.x+from.y)%2 == 0){
-        draw_rectangle({from.x*padX, from.y*padY}, padX, padY, lightColor);
+    TDT4102::Point fromPoint = cordToPoint(from);
+    TDT4102::Point toPoint = cordToPoint(to);
+    if((fromPoint.x+fromPoint.y)%2 == 0){
+        draw_rectangle({fromPoint.x*padX, fromPoint.y*padY}, padX, padY, lightColor);
     }
     else{
-        draw_rectangle({from.x*padX, from.y*padY}, padX, padY, darkColor);
+        draw_rectangle({fromPoint.x*padX, fromPoint.y*padY}, padX, padY, darkColor);
     }
 
-    if((to.x+to.y)%2 == 0){
-        draw_rectangle({to.x*padX, to.y*padY}, padX, padY, lightColor);
+    if((toPoint.x+toPoint.y)%2 == 0){
+        draw_rectangle({toPoint.x*padX, toPoint.y*padY}, padX, padY, lightColor);
     }
     else{
-        draw_rectangle({to.x*padX, to.y*padY}, padX, padY, darkColor);
+        draw_rectangle({toPoint.x*padX, toPoint.y*padY}, padX, padY, darkColor);
     }
 }

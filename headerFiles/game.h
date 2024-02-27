@@ -1,6 +1,8 @@
 #pragma once
 #include "board.h"
 #include "window.h"
+#include "moveData.h"
+#include "gameLogicSupport.h"
 
 
 class Game {
@@ -11,10 +13,8 @@ private:
     int blackTime = 300000;
 
     //ting for undo osv..
-    vector<vector<TDT4102::Point>> history;
-    vector<Piece*> captureHistory;
-    vector<vector<TDT4102::Point>> forwardHistory;
-    vector<Piece*> captureForwardHistory;
+    vector<MoveData> history;
+    vector<MoveData> forwardHistory;
     void undoMove();
     void forwardMove();
     void clearActiveSquare();
@@ -31,7 +31,11 @@ public:
     TDT4102::Point activeSquare;
     TDT4102::Point moveTo;
     vector<TDT4102::Point> legalMoves;
-    
+
+
+    int halfMoves = 0;
+    string FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR b KQkq - 0";
+    void generateFEN();
 
 };
 

@@ -8,6 +8,7 @@
 #include "bishop.h"
 #include "queen.h"
 #include "king.h"
+#include "gameLogicSupport.h"
 
 
 class Board {
@@ -21,7 +22,7 @@ public:
     ~Board();
     Piece* the_board[8][8];
     Piece* pieceAt(TDT4102::Point point);
-    void PlacePieceAt(Piece* piece, TDT4102::Point point);
+    void PlacePieceAt(const char piece, TDT4102::Point point);
     void Move(TDT4102::Point from, TDT4102::Point to); 
     bool TryToMove(TDT4102::Point from, TDT4102::Point to) const;
     bool TryToMoveFiltered(TDT4102::Point from, TDT4102::Point to) const;

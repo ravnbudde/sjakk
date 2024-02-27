@@ -1,6 +1,7 @@
 #pragma once
 #include "std_lib_facilities.h"
 #include "pieces.h"
+#include "gameLogicSupport.h"
 
 
 class Bishop : public Piece {

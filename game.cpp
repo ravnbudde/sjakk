@@ -28,38 +28,162 @@ void Game::clearActiveSquare(){
     legalMoves.clear();
 }
 
-void Game::undoMove(){
-    __SIZE_TYPE__ lastMoveIndex = history.size()-1;
+void Game::generateFEN(){
+    FEN = "";
+    int noPieceCount = 0;
+    //Går over alle brikkene
+    for(int y = 0; y < 8; y++){
+        for(int x = 0; x < 8; x++){
+            if(board.the_board[x][y] == nullptr){
+                noPieceCount += 1;
+            }
+            else{
+                switch (board.the_board[x][y]->getPieceType()*board.the_board[x][y]->side)
+                {
+                case 1:
+                    if(noPieceCount != 0){
+                        FEN += to_string(noPieceCount);
+                        noPieceCount = 0;
+                    }
+                    FEN += intToPieceType(1);
+                    break;
+                case 3:
+                    if(noPieceCount != 0){
+                        FEN += to_string(noPieceCount);
+                        noPieceCount = 0;
+                    }
+                    FEN += intToPieceType(3);
+                    break;
+                case 4:
+                    if(noPieceCount != 0){
+                        FEN += to_string(noPieceCount);
+                        noPieceCount = 0;
+                    }
+                    FEN += intToPieceType(4);
+                    break;
+                case 5:
+                    if(noPieceCount != 0){
+                        FEN += to_string(noPieceCount);
+                        noPieceCount = 0;
+                    }
+                    FEN += intToPieceType(5);
+                    break;
+                case 9:
+                    if(noPieceCount != 0){
+                        FEN += to_string(noPieceCount);
+                        noPieceCount = 0;
+                    }
+                    FEN += intToPieceType(9);
+                    break;
+                case 10:
+                    if(noPieceCount != 0){
+                        FEN += to_string(noPieceCount);
+                        noPieceCount = 0;
+                    }
+                    FEN += intToPieceType(10);
+                    break;
+                case -1:
+                    if(noPieceCount != 0){
+                        FEN += to_string(noPieceCount);
+                        noPieceCount = 0;
+                    }
+                    FEN += intToPieceType(-1);
+                    break;
+                case -3:
+                    if(noPieceCount != 0){
+                        FEN += to_string(noPieceCount);
+                        noPieceCount = 0;
+                    }
+                    FEN += intToPieceType(-3);
+                    break;
+                case -4:
+                    if(noPieceCount != 0){
+                        FEN += to_string(noPieceCount);
+                        noPieceCount = 0;
+                    }
+                    FEN += intToPieceType(-4);
+                    break;
+                case -5:
+                    if(noPieceCount != 0){
+                        FEN += to_string(noPieceCount);
+                        noPieceCount = 0;
+                    }
+                    FEN += intToPieceType(-5);
+                    break;
+                case -9:
+                    if(noPieceCount != 0){
+                        FEN += to_string(noPieceCount);
+                        noPieceCount = 0;
+                    }
+                    FEN += intToPieceType(-9);
+                    break;
+                case -10:
+                    if(noPieceCount != 0){
+                        FEN += to_string(noPieceCount);
+                        noPieceCount = 0;
+                    }
+                    FEN += intToPieceType(-10);
+                    break;
 
-    Point movedFrom = history.at(lastMoveIndex).at(0);
-    Point movedTo = history.at(lastMoveIndex).at(1);
+                default:
+                    break;
+                }
+            }
+        }
+        if(noPieceCount != 0){
+            FEN += to_string(noPieceCount);
+            noPieceCount = 0;
+        }
+        FEN += "/";
+    }
+    //Hvem sin tur det er
+    if(board.turn == 1){
+        FEN += " w";
+    }
+    else{
+        FEN += " b";
+    }
+    //Fiks med castle her
+    FEN += " KQkq";
+    //En Passant
+    if(board.GetEnPassant().x != NULL and board.GetEnPassant().y != NULL){
+        FEN += " " + pointToCord(board.GetEnPassant());
+    }
+    else{
+        FEN += " -";
+    }
+    if(history.back().moveType == MoveType::CAPTURE or history.back().moveType == MoveType::PAWNPUSH){
+        FEN += " 0";
+        halfMoves = 0;
+    }
+    else{
+        FEN += " " + to_string(halfMoves);
+        halfMoves += 1;
+    }
+}
+
+void Game::undoMove(){
+    Point movedFrom = cordToPoint(history.back().from);
+    Point movedTo = cordToPoint(history.back().to);
+    char capturedPiece = history.back().capturedPiece;
+
+    forwardHistory.push_back(history.back());
+    history.pop_back();
 
     board.Move(movedTo, movedFrom);
-    board.PlacePieceAt(captureHistory.at(captureHistory.size()-1), movedTo);
-
-    forwardHistory.push_back(history.at(lastMoveIndex));
-    history.pop_back();
-    //history.erase(history.begin()+lastMoveIndex);
-    captureForwardHistory.push_back(captureHistory.at(lastMoveIndex));
-    captureHistory.pop_back();
-    //captureHistory.erase(captureHistory.begin()+lastMoveIndex);
+    board.PlacePieceAt(capturedPiece, movedTo);  
 }
 
 void Game::forwardMove(){
-    __SIZE_TYPE__ moveIndex = forwardHistory.size()-1;
+    TDT4102::Point movedFrom = cordToPoint(forwardHistory.back().from); 
+    TDT4102::Point movedTo = cordToPoint(forwardHistory.back().to);
+    //Sletter brikken som blir tatt
+    delete board.the_board[movedTo.x][movedTo.y];
 
-    TDT4102::Point movedFrom = forwardHistory.at(moveIndex).at(0); 
-    TDT4102::Point movedTo = forwardHistory.at(moveIndex).at(1);
+    history.push_back(forwardHistory.back());
+    forwardHistory.pop_back();
 
     board.Move(movedFrom, movedTo);
-    //board.PlacePieceAt(captureForwardHistory.at(moveIndex), movedFrom);
-
-    history.push_back(forwardHistory.at(moveIndex));
-    forwardHistory.pop_back();
-    //forwardHistory.erase(history.begin()+moveIndex);
-    captureHistory.push_back(captureForwardHistory.at(moveIndex));
-    captureForwardHistory.pop_back();
-    //captureForwardHistory.erase(captureForwardHistory.begin()+moveIndex);
 }
 
 
@@ -86,7 +210,7 @@ void Game::playGame(){
         board.generateMap();
         win.drawBoard();
         if(history.size() > 0){
-            win.drawLastMove(history.back().at(0), history.back().at(1));
+            win.drawLastMove(history.back().from, history.back().to);
         }
         win.drawLegalMoves(legalMoves);
         //win.drawLegalMoves(legalMoves);
@@ -115,13 +239,28 @@ void Game::playGame(){
 
             else if(board.TryToMove(activeSquare, mouseCord)){
                 //Legg til move i history
-                history.push_back(vector{activeSquare, mouseCord});
-                captureHistory.push_back(board.pieceAt(mouseCord));
+                // if(board.the_board[activeSquare.x][activeSquare.y]->getPieceType() == 1 and board.turn*(mouseCord.y-activeSquare.y)==2){
+                //     MoveData theMove(MoveType::)
+                // }
+                if(board.the_board[mouseCord.x][mouseCord.y] != nullptr){
+                    char capturePiece = intToPieceType(-1*board.turn*board.the_board[mouseCord.x][mouseCord.y]->getPieceType());
+                    MoveData theMove(FEN, activeSquare, mouseCord, capturePiece, MoveType::CAPTURE);
+                    history.push_back(theMove);
+                    delete board.the_board[mouseCord.x][mouseCord.y]; 
+                }
+                else{
+                    MoveData theMove(FEN, activeSquare, mouseCord, MoveType::NORMAL);
+                    history.push_back(theMove);
+                }
+
+                
                 //Sletter forwardhistory
                 forwardHistory.clear();
-                captureForwardHistory.clear();
                 //Flytt brikken
                 board.Move(activeSquare, mouseCord);
+                //Oppdater FEN-map
+                generateFEN();
+                cout << FEN << endl;
                 //Stopp å vise lovlige trekk osv
                 moveTo = mouseCord;
                 clearActiveSquare();

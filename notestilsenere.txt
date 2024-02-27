@@ -1,5 +1,4 @@
-#pragma once
-
+litt usikker på om subprojectsfilene blir automatisk fornya, så kanskje finne ut hvordan jeg kan overloade point utenfra, imens er koden til det her: (subprojects/animationwindow/include/Point.h)
 namespace TDT4102 {
 	struct Point {
 		int x = 0;

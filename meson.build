@@ -36,6 +36,7 @@ exe = executable(
 'horse.cpp',
 'king.cpp',
 'main.cpp',
+'moveData.cpp',
 'pawn.cpp',
 'pieces.cpp',
 'queen.cpp',
