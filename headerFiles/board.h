@@ -21,6 +21,8 @@ public:
     ~Board();
     Piece* the_board[8][8];
     Piece* pieceAt(TDT4102::Point point);
+    void createBoardFromFEN(const string& FEN);
+    void deleteAllPieces();
     void PlacePieceAt(const char piece, TDT4102::Point point);
     void Move(TDT4102::Point from, TDT4102::Point to); 
     bool TryToMove(TDT4102::Point from, TDT4102::Point to) const;
@@ -28,9 +30,14 @@ public:
     TDT4102::Point en_passant;
     TDT4102::Point GetEnPassant() const;
     int turn;
-    bool isInCheck(int side) const;
+    TDT4102::Point getKingCord(int side) const;
+    bool isInCheck(int side, TDT4102::Point kingCord) const;
     vector<TDT4102::Point> filterLegalMoves(TDT4102::Point activeSquare) const;
     bool checkEnPassant(TDT4102::Point activeSquare) const;
+
+    string FEN = "";
+    bool checkCastle(const char castleType) const;
+    void moveCastle(char type);
 
 
     int map[8][8] = {

@@ -1,17 +1,13 @@
 #include "headerFiles/game.h"
 
 Game::Game(): gamestate{"active"}, board{Board{}}, win{SjakkWindow{}}
-{}
-
-void print8x8arr(const int (&arr)[8][8]){
-    for(int y = 0; y < 8; y++){
-        for(int x = 0; x < 8; x++){
-            cout << arr[x][y] << '\t';
-        }
-        cout << endl;
-    }
-    cout << endl;
+{
+    board.FEN = FEN;
 }
+
+
+
+
 
 
 void Game::updateTimes(){
@@ -163,9 +159,6 @@ void Game::generateFEN(){
     }
 }
 
-
-
-
 void Game::undoMove(){
     TDT4102::Point movedFrom = cordToPoint(history.back().from);
     TDT4102::Point movedTo = cordToPoint(history.back().to);
@@ -266,13 +259,12 @@ void Game::playGame(){
             else if(mouseCord.x > 7 or mouseCord.y > 7){}
             //Sjekker om man flyttet til et lovlig sted
 
-            else if(board.TryToMove(activeSquare, mouseCord)){
+            else if(board.TryToMoveFiltered(activeSquare, mouseCord)){
                 //Legg til move i history
                 if(board.the_board[activeSquare.x][activeSquare.y]->getPieceType() == 1 and abs(mouseCord.x-activeSquare.x)==1 and board.GetEnPassant().y == mouseCord.y){
                     MoveData theMove(FEN, activeSquare, mouseCord, intToPieceType(-board.turn), MoveType::ENPASSANT);
                     history.push_back(theMove);
                     TDT4102::Point capturedCord = cordToPoint(getEPfromFEN(FEN));
-                    cout << "EP capture square: " << getEPfromFEN(FEN) << endl;
                     delete board.the_board[capturedCord.x][capturedCord.y];
                     board.the_board[capturedCord.x][capturedCord.y] = nullptr;
                 }
@@ -298,12 +290,13 @@ void Game::playGame(){
                 board.Move(activeSquare, mouseCord);
                 //Oppdater FEN-map
                 generateFEN();
+                board.FEN = FEN;
                 cout << FEN << endl;
                 //Stopp å vise lovlige trekk osv
                 moveTo = mouseCord;
                 clearActiveSquare();
             }
-            else if(board.map[mouseCord.x][mouseCord.y] == 0){}
+            else if(board.the_board[mouseCord.x][mouseCord.y] == nullptr){clearActiveSquare();}
             else{
                 //Bytter aktivert brikke
                 activeSquare = mouseCord;

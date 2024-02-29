@@ -99,3 +99,8 @@ TDT4102::Point cordToPoint(const string &cord);
 
 //FEN hjelpefunksjoner
 const string getEPfromFEN(const string &FEN);
+const string getCastlefromFEN(const string &FEN);
+const string getBoardPosfromFEN(const string &FEN);
+
+
+void print8x8arr(const int (&arr)[8][8]);

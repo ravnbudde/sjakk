@@ -1,7 +1,9 @@
 #include "headerFiles/board.h"
 
 Board::Board(): en_passant{TDT4102::Point(NULL, NULL)}, turn{1} 
-{BoardNewSetup();}
+{
+    BoardNewSetup();
+}
 
 Board::~Board()
 {
@@ -110,6 +112,21 @@ bool Board::TryToMove(TDT4102::Point from, TDT4102::Point to) const{
     if(checkEnPassant(from)){
         legalMoves.push_back(GetEnPassant());
     }
+        //Sjekker de forskjellige castlene
+    if(the_board[from.x][from.y]->getPieceType() == 10){
+        if(checkCastle('K')){
+            legalMoves.push_back(cordToPoint("g1"));
+        }
+        if(checkCastle('Q')){
+            legalMoves.push_back(cordToPoint("c1"));
+        }
+        if(checkCastle('k')){
+            legalMoves.push_back(cordToPoint("g8"));
+        }
+        if(checkCastle('q')){
+            legalMoves.push_back(cordToPoint("c8"));
+        }
+    }
 
     for(TDT4102::Point point : legalMoves){
         if(point.x == to.x and point.y == to.y){
@@ -130,10 +147,11 @@ bool Board::TryToMoveFiltered(TDT4102::Point from, TDT4102::Point to) const{
     //Sjekker at det er 'din' tur
     if(piece->side != turn){return false;}
     
-    
 
     //Sjekker om trekket er lovlig;
     vector<TDT4102::Point> legalMoves = filterLegalMoves(from);
+
+
     for(TDT4102::Point point : legalMoves){
         if(point.x == to.x and point.y == to.y){
             return true;
@@ -144,7 +162,7 @@ bool Board::TryToMoveFiltered(TDT4102::Point from, TDT4102::Point to) const{
 
 }
 
-bool Board::isInCheck(int side) const{
+TDT4102::Point Board::getKingCord(int side) const{
     TDT4102::Point kingCord;
     for(int y = 0; y < 8; y++){
         for(int x = 0; x < 8; x++){
@@ -153,11 +171,18 @@ bool Board::isInCheck(int side) const{
                     if(the_board[x][y]->side == side){
                         kingCord.x = x;
                         kingCord.y = y;
+                        return kingCord;
                     }
                 }
             }
         }
     }
+    cout << "fant ikke kongen (Board::getKingCord)" << endl;
+    return kingCord;
+}
+
+bool Board::isInCheck(int side, TDT4102::Point kingCord) const{
+
 
     for(int y = 0; y < 8; y++){
         for(int x = 0; x < 8; x++){
@@ -166,6 +191,7 @@ bool Board::isInCheck(int side) const{
                 vector<TDT4102::Point> moves = tempPiece->getLegalMoves(map, TDT4102::Point(x,y));
                 for(const auto& cord : moves){
                     if(cord.x == kingCord.x and cord.y == kingCord.y){
+                        cout << "brikken som kan ta kongen da er: " << intToPieceType(tempPiece->getPieceType()) << " som kan flytte til: " << pointToCord(cord) << endl;
                         return true;
                     }
                 }
@@ -232,54 +258,187 @@ TDT4102::Point Board::GetEnPassant() const{
     return en_passant;
 }
 
+bool Board::checkCastle(const char castleType) const{
+    //Sjekker at rutene er tomme
+    bool isSpaceClear = false;
+    switch (castleType)
+    {
+    case 'K':
+        if(the_board[cordToPoint("f1").x][cordToPoint("f1").y] == nullptr and the_board[cordToPoint("g1").x][cordToPoint("g1").y] == nullptr){
+            isSpaceClear = true;
+        } 
+        else{
+            return false;
+        }
+        break;
+    case 'Q':
+        if(the_board[cordToPoint("d1").x][cordToPoint("d1").y] == nullptr and the_board[cordToPoint("c1").x][cordToPoint("c1").y] == nullptr and the_board[cordToPoint("b1").x][cordToPoint("b1").y] == nullptr){
+            isSpaceClear = true;
+        } 
+        else{
+            return false;
+        }
+        break;
+    case 'k':
+        if(the_board[cordToPoint("f8").x][cordToPoint("f8").y] == nullptr and the_board[cordToPoint("g8").x][cordToPoint("g8").y] == nullptr){
+            isSpaceClear = true;
+        } 
+        else{
+            return false;
+        }
+        break;
+    case 'q':
+        if(the_board[cordToPoint("d8").x][cordToPoint("d8").y] == nullptr and the_board[cordToPoint("c8").x][cordToPoint("c8").y] == nullptr and the_board[cordToPoint("b8").x][cordToPoint("b8").y] == nullptr){
+            isSpaceClear = true;
+        } 
+        else{
+            return false;
+        }
+        break;
+    default:
+        cout << "Gitt castleType var ikke KQkq (Board::checkCastle())" << endl;
+        return false;
+        
+        break;
+    }
+
+    //Sjekker at castle den veiene er lov
+    const string theoreticalCastles = getCastlefromFEN(FEN);
+    for(const auto& element : theoreticalCastles){
+        if(element == '-'){
+            return false;
+        }
+        if(element == castleType){
+            return true;
+        }
+    }
+    cout << "Castle i FEN hadde ikke - eller castletype? (board::checkCastle())" << endl;
+    return false;
+}
+
+void Board::createBoardFromFEN(const string& FEN){
+    int x = 0;
+    int y = 0;
+    
+    const string posFEN = getBoardPosfromFEN(FEN);
+    cout << posFEN << endl;
+
+    //Lager et helt tomt brett
+    for(int i = 0; i < 8; i++){
+        for(int j = 0; j < 8; j++){
+            the_board[j][i] = nullptr;
+        }
+    }
+    //plasserer brikker
+    while(y < 8){
+        for(const auto& element : posFEN){
+            switch (element)
+            {
+            case 'P':
+                the_board[x][y] = new Pawn(1);
+                x += 1;
+                break;
+            case 'H':
+                the_board[x][y] = new Horse(1);
+                x += 1;
+                break;
+            case 'B':
+                the_board[x][y] = new Bishop(1);
+                x += 1;
+                break;
+            case 'R':
+                the_board[x][y] = new Rook(1);
+                x += 1;
+                break;
+            case 'Q':
+                the_board[x][y] = new Queen(1);
+                x += 1;
+                break;
+            case 'K':
+                the_board[x][y] = new King(1);
+                x += 1;
+                break;
+            case 'p':
+                the_board[x][y] = new Pawn(-1);
+                x += 1;
+                break;
+            case 'h':
+                the_board[x][y] = new Horse(-1);
+                x += 1;
+                break;
+            case 'b':
+                the_board[x][y] = new Bishop(-1);
+                x += 1;
+                break;
+            case 'r':
+                the_board[x][y] = new Rook(-1);
+                x += 1;
+                break;
+            case 'q':
+                the_board[x][y] = new Queen(-1);
+                x += 1;
+                break;
+            case 'k':
+                the_board[x][y] = new King(-1);
+                x += 1;
+                break;
+            case '1':
+                x += 1;
+                break;
+            case '2':
+                x += 2;
+                break;
+            case '3':
+                x += 3;
+                break;
+            case '4':
+                x += 4;
+                break;
+            case '5':
+                x += 5;
+                break;
+            case '6':
+                x += 6;
+                break;
+            case '7':
+                x += 7;
+                break;
+            case '8':
+                x += 8;
+                break;
+            case '/':
+                x = 0;
+                y += 1;
+                break;
+            case ' ':
+                //cout << "Burde ikke vaere space her (Board::createposfromfen)" << endl;
+                break;
+            default:
+                break;
+            }
+        }
+    }
+}
+
+void Board::deleteAllPieces(){
+    for(int i = 0; i < 8; i++){
+        for(int j = 0; j < 0; j++){
+            delete the_board[j][i];
+            the_board[j][i] = nullptr;
+        }
+    }
+}
+
 vector<TDT4102::Point> Board::filterLegalMoves(TDT4102::Point activeSquare) const{
     //Henter alle pseudolovlige trekk til brikken
     vector<TDT4102::Point> pseudoLegalMoves = the_board[activeSquare.x][activeSquare.y]->getLegalMoves(map, activeSquare);
     int color = the_board[activeSquare.x][activeSquare.y]->side;
     vector<TDT4102::Point>legalMoves;
 
-    //Lage en kopi av brettet i funksjonen. tror det er her det blir noe feil?
     Board tempBoard{};
+    tempBoard.FEN = FEN; // sjekket at denne FEN stemmer med hovedboard
+    tempBoard.createBoardFromFEN(FEN); //denne funker også
     tempBoard.turn = turn;
-    for(int y = 0; y < 8; y++){
-        for(int x = 0; x < 8; x++){
-            //tempBoard.the_board[x][y] = board.the_board[x][y];
-            if(the_board[x][y] == nullptr){
-                tempBoard.the_board[x][y] = nullptr;
-                //cout << 0 << '\t';
-            }
-            else if(the_board[x][y]->getPieceType() == 1){
-                tempBoard.the_board[x][y] = new Pawn(the_board[x][y]->side);
-                //cout << tempBoard.the_board[x][y]->getPieceType()*tempBoard.the_board[x][y]->side << '\t';
-            }
-            else if(the_board[x][y]->getPieceType() == 3){
-                tempBoard.the_board[x][y] = new Horse(the_board[x][y]->side);
-                //cout << tempBoard.the_board[x][y]->getPieceType()*tempBoard.the_board[x][y]->side << '\t';
-            }
-            else if(the_board[x][y]->getPieceType() == 4){
-                tempBoard.the_board[x][y] = new Bishop(the_board[x][y]->side);
-                //cout << tempBoard.the_board[x][y]->getPieceType()*tempBoard.the_board[x][y]->side << '\t';
-            }
-            else if(the_board[x][y]->getPieceType() == 5){
-                tempBoard.the_board[x][y] = new Rook(the_board[x][y]->side);
-                //cout << tempBoard.the_board[x][y]->getPieceType()*tempBoard.the_board[x][y]->side << '\t';
-            }
-            else if(the_board[x][y]->getPieceType() == 9){
-                tempBoard.the_board[x][y] = new Queen(the_board[x][y]->side);
-                //cout << tempBoard.the_board[x][y]->getPieceType()*tempBoard.the_board[x][y]->side << '\t';
-            }
-            else if(the_board[x][y]->getPieceType() == 10){
-                tempBoard.the_board[x][y] = new King(the_board[x][y]->side);
-                //cout << tempBoard.the_board[x][y]->getPieceType()*tempBoard.the_board[x][y]->side << '\t';
-            }
-            else{
-                tempBoard.the_board[x][y] = nullptr;
-                //cout << 0 << '\t';
-            }
-        }
-        //cout << endl;
-    }
-
     
 
     //ser på brikken vi skal sjekke
@@ -288,29 +447,45 @@ vector<TDT4102::Point> Board::filterLegalMoves(TDT4102::Point activeSquare) cons
     if(piece == nullptr){return pseudoLegalMoves;}
 
     //sjekker om en-passant er relevant
+    //cout << "er leter etter EP? " << checkEnPassant(activeSquare) << endl; 
     if(checkEnPassant(activeSquare)){
-        cout << TryToMove(activeSquare, GetEnPassant()) << endl;
+        //cout << "Er det en EP? " << TryToMove(activeSquare, GetEnPassant()) << endl;
         if(TryToMove(activeSquare, GetEnPassant())){
-            legalMoves.push_back(GetEnPassant());
+            pseudoLegalMoves.push_back(GetEnPassant());
         }
     }
 
+    //Sjekker de forskjellige castlene
+    if(the_board[activeSquare.x][activeSquare.y]->getPieceType() == 10){
+        if(checkCastle('K')){
+            pseudoLegalMoves.push_back(cordToPoint("g1"));
+        }
+        if(checkCastle('Q')){
+            pseudoLegalMoves.push_back(cordToPoint("c1"));
+        }
+        if(checkCastle('k')){
+            pseudoLegalMoves.push_back(cordToPoint("g8"));
+        }
+        if(checkCastle('q')){
+            pseudoLegalMoves.push_back(cordToPoint("c8"));
+        }
+    }
+
+
     for(int i = 0; i < pseudoLegalMoves.size(); i++){
         tempBoard.generateMap();
-            //returnerer bare true på firkanter 1 unna brikka
-        if(tempBoard.TryToMove(activeSquare,pseudoLegalMoves.at(i))){
-
-            
+        if(TryToMove(activeSquare,pseudoLegalMoves.at(i))){
             //print8x8arr(tempBoard.map);
             tempBoard.Move(activeSquare, pseudoLegalMoves.at(i));
+            TDT4102::Point kingCord = tempBoard.getKingCord(color);
             tempBoard.generateMap();
-
+            cout << "i sjakk etter trekket: " << pointToCord(pseudoLegalMoves.at(i)) << ": " << (tempBoard.isInCheck(color, kingCord)) << endl << endl;
                 
-            if(!tempBoard.isInCheck(color)){
+            if(!tempBoard.isInCheck(color, kingCord)){
                 legalMoves.push_back(pseudoLegalMoves.at(i));
             }
-
-            tempBoard.Move(pseudoLegalMoves.at(i), activeSquare);
+            tempBoard.deleteAllPieces();
+            tempBoard.createBoardFromFEN(FEN);
         }
     }
 
@@ -329,4 +504,37 @@ bool Board::checkEnPassant(TDT4102::Point activeSquare) const{
     }
     return false;
 }
+
+void Board::moveCastle(char type){
+    switch (type)
+    {
+    case 'K':
+        Move(cordToPoint("e1"), cordToPoint("g1"));
+        Move(cordToPoint("h1"), cordToPoint("f1"));
+        break;
+
+    case 'Q':
+        Move(cordToPoint("e1"), cordToPoint("c1"));
+        Move(cordToPoint("a1"), cordToPoint("d1"));
+        break;
+
+    case 'k':
+        Move(cordToPoint("e8"), cordToPoint("g8"));
+        Move(cordToPoint("h8"), cordToPoint("f8"));
+        break;
+
+    case 'q':
+        Move(cordToPoint("e8"), cordToPoint("c8"));
+        Move(cordToPoint("a8"), cordToPoint("d8"));
+        break;
+    
+    default:
+    cout << "Invalid castle type (should be K||Q||k||q)" << endl;
+        break;
+    }
+    return;
+}
+
+
+
 

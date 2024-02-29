@@ -31,5 +31,7 @@ vector<TDT4102::Point> King::getLegalMoves(const int (&map)[8][8], TDT4102::Poin
         }
     }
 
+    
+
     return moves;
 }

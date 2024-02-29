@@ -40,4 +40,3 @@ public:
 };
 
 
-void print8x8arr(const int (&arr)[8][8]);

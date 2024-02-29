@@ -45,6 +45,15 @@ TDT4102::Point cordToPoint(const string &cord){
 }
 
 
+void print8x8arr(const int (&arr)[8][8]){
+    for(int y = 0; y < 8; y++){
+        for(int x = 0; x < 8; x++){
+            cout << arr[x][y] << '\t';
+        }
+        cout << endl;
+    }
+    cout << endl;
+}
 
 
 const string getEPfromFEN(const string &FEN){
@@ -68,3 +77,35 @@ const string getEPfromFEN(const string &FEN){
     return "Didnt find en_passant element in FEN";
 }
 
+const string getCastlefromFEN(const string &FEN){
+    int indexCount = 0;
+    const char whitespace = ' ';
+    string output = "";
+    for(int i = 0; i < FEN.length(); i++){
+        if(FEN[i] == whitespace){
+            indexCount += 1;
+            if(indexCount == 3){
+                return output;
+            }
+            output = "";
+        }
+        else{
+            output += FEN[i];
+        }
+    }
+    return "Didnt find castle element in FEN";
+}
+
+const string getBoardPosfromFEN(const string &FEN){
+    const char whitespace = ' ';
+    string output = "";
+    for(int i = 0; i < FEN.length(); i++){
+        if(FEN[i] == whitespace){
+            return output;
+        }
+        else{
+            output += FEN[i];
+        }
+    }
+    return "Didnt find move element in FEN";
+}
