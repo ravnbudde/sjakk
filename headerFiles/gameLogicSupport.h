@@ -3,6 +3,9 @@
 #include "pieces.h"
 #include "Point.h"
 
+//vanlig startbrett FEN
+constexpr string_view newBoardFEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR b KQkq - 0";
+
 //Standard square brett, winH:winW = 8:10
 constexpr int winH = 800;
 constexpr int winW = 1000;

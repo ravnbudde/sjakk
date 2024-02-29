@@ -10,6 +10,7 @@ Game::Game(): gamestate{"active"}, board{Board{}}, win{SjakkWindow{}}
 
 
 
+
 void Game::updateTimes(){
     if(board.turn==1){
         whiteTime -= 17;
@@ -261,7 +262,7 @@ void Game::playGame(){
 
             else if(board.TryToMoveFiltered(activeSquare, mouseCord)){
                 //Legg til move i history
-                if(board.the_board[activeSquare.x][activeSquare.y]->getPieceType() == 1 and abs(mouseCord.x-activeSquare.x)==1 and board.GetEnPassant().y == mouseCord.y){
+                if(board.the_board[activeSquare.x][activeSquare.y]->getPieceType() == 1 and abs(mouseCord.x-activeSquare.x)==1 and board.GetEnPassant() == mouseCord){
                     MoveData theMove(FEN, activeSquare, mouseCord, intToPieceType(-board.turn), MoveType::ENPASSANT);
                     history.push_back(theMove);
                     TDT4102::Point capturedCord = cordToPoint(getEPfromFEN(FEN));
@@ -291,7 +292,7 @@ void Game::playGame(){
                 //Oppdater FEN-map
                 generateFEN();
                 board.FEN = FEN;
-                cout << FEN << endl;
+                cout << FEN << '\t' << "(game::playgame)" <<endl;
                 //Stopp å vise lovlige trekk osv
                 moveTo = mouseCord;
                 clearActiveSquare();

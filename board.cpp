@@ -3,6 +3,7 @@
 Board::Board(): en_passant{TDT4102::Point(NULL, NULL)}, turn{1} 
 {
     BoardNewSetup();
+    //createBoardFromFEN(FEN);
 }
 
 Board::~Board()
@@ -322,7 +323,6 @@ void Board::createBoardFromFEN(const string& FEN){
     
     const string posFEN = getBoardPosfromFEN(FEN);
     cout << posFEN << endl;
-
     //Lager et helt tomt brett
     for(int i = 0; i < 8; i++){
         for(int j = 0; j < 8; j++){
@@ -411,7 +411,7 @@ void Board::createBoardFromFEN(const string& FEN){
                 y += 1;
                 break;
             case ' ':
-                //cout << "Burde ikke vaere space her (Board::createposfromfen)" << endl;
+                cout << "Burde ikke vaere space her (Board::createposfromfen)" << endl;
                 break;
             default:
                 break;

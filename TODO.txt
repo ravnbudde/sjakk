@@ -3,6 +3,8 @@ Om en side flytter en bonde to fram, men trekker tilbake trekket, kan de nå ta 
 fiksa den første men fjerner den ikke noten siden føler det egentlig burde vert lov. gir mening.
 
 
+Finn ut hva som er greia med board.createBoardFromFEN
+
 Fiks for castle king og queen side 
 Fiks history for castle
 

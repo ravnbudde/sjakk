@@ -34,7 +34,7 @@ public:
 
 
     int halfMoves = 0;
-    string FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR b KQkq - 0";
+    string FEN  = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR b KQkq - 0";
     void generateFEN();
 
 };
