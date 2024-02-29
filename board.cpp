@@ -330,95 +330,115 @@ void Board::createBoardFromFEN(const string& FEN){
         }
     }
     //plasserer brikker
-    while(y < 8){
-        for(const auto& element : posFEN){
-            switch (element)
-            {
-            case 'P':
-                the_board[x][y] = new Pawn(1);
-                x += 1;
-                break;
-            case 'H':
-                the_board[x][y] = new Horse(1);
-                x += 1;
-                break;
-            case 'B':
-                the_board[x][y] = new Bishop(1);
-                x += 1;
-                break;
-            case 'R':
-                the_board[x][y] = new Rook(1);
-                x += 1;
-                break;
-            case 'Q':
-                the_board[x][y] = new Queen(1);
-                x += 1;
-                break;
-            case 'K':
-                the_board[x][y] = new King(1);
-                x += 1;
-                break;
-            case 'p':
-                the_board[x][y] = new Pawn(-1);
-                x += 1;
-                break;
-            case 'h':
-                the_board[x][y] = new Horse(-1);
-                x += 1;
-                break;
-            case 'b':
-                the_board[x][y] = new Bishop(-1);
-                x += 1;
-                break;
-            case 'r':
-                the_board[x][y] = new Rook(-1);
-                x += 1;
-                break;
-            case 'q':
-                the_board[x][y] = new Queen(-1);
-                x += 1;
-                break;
-            case 'k':
-                the_board[x][y] = new King(-1);
-                x += 1;
-                break;
-            case '1':
-                x += 1;
-                break;
-            case '2':
-                x += 2;
-                break;
-            case '3':
-                x += 3;
-                break;
-            case '4':
-                x += 4;
-                break;
-            case '5':
-                x += 5;
-                break;
-            case '6':
-                x += 6;
-                break;
-            case '7':
-                x += 7;
-                break;
-            case '8':
-                x += 8;
-                break;
-            case '/':
-                x = 0;
-                y += 1;
-                break;
-            case ' ':
-                cout << "Burde ikke vaere space her (Board::createposfromfen)" << endl;
-                break;
-            default:
-                break;
-            }
+    for(const auto& element : posFEN){
+        switch (element)
+        {
+        case 'P':
+            the_board[x][y] = new Pawn(1);
+            //cout << "made pawn in " << x << ", " <<  y << endl;
+            x += 1;
+            break;
+        case 'H':
+            the_board[x][y] = new Horse(1);
+            //cout << "made horse in " << x << ", " <<  y << endl;
+            x += 1;
+            break;
+        case 'B':
+            the_board[x][y] = new Bishop(1);
+            //cout << "made bishop in " << x << ", " <<  y << endl;
+            x += 1;
+            break;
+        case 'R':
+            the_board[x][y] = new Rook(1);
+            //cout << "made rook in " << x << ", " <<  y << endl;
+            x += 1;
+            break;
+        case 'Q':
+            the_board[x][y] = new Queen(1);
+            //cout << "made queen in " << x << ", " <<  y << endl;
+            x += 1;
+            break;
+        case 'K':
+            the_board[x][y] = new King(1);
+            //cout << "made king in " << x << ", " <<  y << endl;
+            x += 1;
+            break;
+        case 'p':
+            the_board[x][y] = new Pawn(-1);
+            //cout << "made black pawn in " << x << ", " <<  y << endl;
+            x += 1;
+            break;
+        case 'h':
+            the_board[x][y] = new Horse(-1);
+            //cout << "made black horse in " << x << ", " <<  y << endl;
+            x += 1;
+            break;
+        case 'b':
+            the_board[x][y] = new Bishop(-1);
+            //cout << "made black bishop in " << x << ", " <<  y << endl;
+            x += 1;
+            break;
+        case 'r':
+            the_board[x][y] = new Rook(-1);
+            //cout << "made black rook in " << x << ", " <<  y << endl;
+            x += 1;
+            break;
+        case 'q':
+            the_board[x][y] = new Queen(-1);
+            //cout << "made black queen in " << x << ", " <<  y << endl;
+            x += 1;
+            break;
+        case 'k':
+            the_board[x][y] = new King(-1);
+            //cout << "made black king in " << x << ", " <<  y << endl;
+            x += 1;
+            break;
+        case '1':
+            x += 1;
+            //cout << "1 empty space" << endl;
+            break;
+        case '2':
+            x += 2;
+            //cout << "2 empty space" << endl;
+            break;
+        case '3':
+            x += 3;
+            //cout << "3 empty space" << endl;
+            break;
+        case '4':
+            x += 4;
+            //cout << "4 empty space" << endl;
+            break;
+        case '5':
+            //cout << "5 empty space" << endl;
+            x += 5;
+            break;
+        case '6':
+            x += 6;
+            //cout << "6 empty space" << endl;
+            break;
+        case '7':
+            x += 7;
+            //cout << "7 empty space" << endl;
+            break;
+        case '8':
+            x += 8;
+            //cout << "8 empty space" << endl;
+            break;
+        case '/':
+            x = 0;
+            y += 1;
+            //cout << "new row, now starting row: " << y << endl;
+            break;
+        case ' ':
+            cout << "Burde ikke vaere space her (Board::createposfromfen)" << endl;
+            break;
+        default:
+            break;
         }
     }
 }
+
 
 void Board::deleteAllPieces(){
     for(int i = 0; i < 8; i++){
