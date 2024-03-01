@@ -148,6 +148,7 @@ void Game::generateFEN(){
     FEN += " KQkq";
     //En Passant
     if(board.GetEnPassant().y != NULL){
+        cout << pointToCord(board.GetEnPassant()) << endl;
         FEN += " " + pointToCord(board.GetEnPassant());
     }
     else{
@@ -279,7 +280,7 @@ void Game::playGame(){
                 if(board.the_board[activeSquare.x][activeSquare.y]->getPieceType() == 1 and abs(mouseCord.x-activeSquare.x)==1 and board.GetEnPassant() == mouseCord){
                     MoveData theMove(FEN, activeSquare, mouseCord, intToPieceType(-board.turn), MoveType::ENPASSANT);
                     history.push_back(theMove);
-                    TDT4102::Point capturedCord = cordToPoint(getEPfromFEN(FEN));
+                    TDT4102::Point capturedCord = cordToPoint(getCaptureEPfromFEN(FEN));
                     delete board.the_board[capturedCord.x][capturedCord.y];
                     board.the_board[capturedCord.x][capturedCord.y] = nullptr;
                 }

@@ -102,6 +102,7 @@ TDT4102::Point cordToPoint(const string &cord);
 
 //FEN hjelpefunksjoner
 const string getEPfromFEN(const string &FEN);
+const string getCaptureEPfromFEN(const string &FEN);
 const string getCastlefromFEN(const string &FEN);
 const string getBoardPosfromFEN(const string &FEN);
 const int getTurnfromFEN(const string &FEN);

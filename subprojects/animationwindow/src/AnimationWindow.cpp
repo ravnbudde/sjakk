@@ -111,12 +111,12 @@ void TDT4102::AnimationWindow::show_frame() {
 
 void TDT4102::AnimationWindow::update_gui() {
     for (Widget& widget : widgets) {
-        startNuklearDraw(widget.position, widget.uniqueWidgetName, widget.width, widget.height);
         fontCache.setFont(context, Font::arial, 18);
         if (widget.isVisible) {
+            startNuklearDraw(widget.position, widget.uniqueWidgetName, widget.width, widget.height);
             widget.update(context);
+            endNuklearDraw();
         }
-        endNuklearDraw();
     }
 }
 

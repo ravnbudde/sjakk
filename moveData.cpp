@@ -10,7 +10,7 @@ FEN{FEN}, from{pointToCord(from)}, to{pointToCord(to)}, capturedPiece{capturedPi
 {
     if(moveType == MoveType::ENPASSANT){
         
-        capturedPawnCord = getEPfromFEN(FEN);
+        capturedPawnCord = getCaptureEPfromFEN(FEN);
         cout << "Ble lagd enpassant movetype med cord "<<capturedPawnCord << endl;
         // cout << "Og piecetype: " << capturedPiece << endl;
     }

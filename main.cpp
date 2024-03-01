@@ -11,8 +11,8 @@ int main() {
 
 
     //Får feilmelding om man bruker konstruksjonen uten string FEN
-    Game game{startFEN};
-
+    Game game{"rnbqkbnr/pp2pppp/3p4/2pP4/8/8/PPP1PPPP/RNBQKBNR w KQkq c6 0 3"};
+  
     game.board.generateMap();
 
     //cout << game.board.map[0][0] << endl;
