@@ -1,8 +1,3 @@
-
-
-Om man initialiserer med en annen string en startFEN kan kongene gå veldig random??
-starta etter jeg fiksa så en_passant funker om det tar bonden som har deg i sjakk tror jeg
-
 Fiks for castle king og queen side 
 Fiks history for castle
 

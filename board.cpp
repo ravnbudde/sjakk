@@ -470,7 +470,9 @@ vector<TDT4102::Point> Board::filterLegalMoves(TDT4102::Point activeSquare) cons
 
     //sjekker om en-passant er relevant, og legger til i legalmoves om det er
     //gjør det her i stedet for legalmoves tilfelle en_passant-capture setter deg ut av sjakk
-    //cout << "er leter etter EP? " << checkEnPassant(activeSquare) << endl; 
+    //cout << "er leter etter EP? " << checkEnPassant(activeSquare) << endl;
+    //cout << FEN << "\t" << "(board::filterlegalmoves)" << endl; 
+    //cout << en_passant.x << ", " << en_passant.y << "\t" << "(board::filterlegalmoves)" << endl;
     if(checkEnPassant(activeSquare)){
         //cout << "Er det en EP? " << TryToMove(activeSquare, GetEnPassant()) << endl;
         bool triedToMove = false;

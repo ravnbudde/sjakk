@@ -177,6 +177,9 @@ void Game::undoMove(){
     char capturedPiece = history.back().capturedPiece;
     MoveType moveType = history.back().moveType;
     TDT4102::Point capturedCord;
+    if(history.size() > 1){
+        halfMoves = getHMfromFEN(history.at(history.size()-2).FEN);
+    }
     if(moveType == MoveType::CAPTURE){
         capturedCord = movedTo; 
     }
@@ -190,17 +193,27 @@ void Game::undoMove(){
     if(moveType == MoveType::CAPTURE or moveType == MoveType::ENPASSANT){
         board.PlacePieceAt(capturedPiece, capturedCord); 
     }
+    if(moveType == MoveType::ENPASSANT){
+        board.en_passant = cordToPoint(getEPfromFEN(history.back().FEN));
+    }
 
+
+    FEN = history.back().FEN;
+    board.FEN = FEN;
     forwardHistory.push_back(history.back());
     history.pop_back();
-    totMoves -= 1;
+    if(board.turn == 1){
+        totMoves += 1;
+    }
 }
 
 void Game::forwardMove(){
     TDT4102::Point movedFrom = cordToPoint(forwardHistory.back().from); 
     TDT4102::Point movedTo = cordToPoint(forwardHistory.back().to);
     MoveType moveType = forwardHistory.back().moveType;
-    TDT4102::Point capturedCord;    
+    TDT4102::Point capturedCord; 
+
+    halfMoves += 1;   
 
     if(moveType == MoveType::CAPTURE){
         capturedCord = movedTo; 
@@ -210,16 +223,33 @@ void Game::forwardMove(){
     }
 
     if(moveType == MoveType::CAPTURE or moveType == MoveType::ENPASSANT){
+        halfMoves = 0;
         delete board.the_board[capturedCord.x][capturedCord.y];
         board.the_board[capturedCord.x][capturedCord.y] = nullptr;
     }
     
+    if(moveType == MoveType::PAWNPUSH and abs(movedFrom.y-movedTo.y) == 2){
+        if(board.turn == 1){
+            board.en_passant.x = movedFrom.x;
+            board.en_passant.y = movedFrom.y - 1;  
+        }
+        else{
+            board.en_passant.x = movedFrom.x;
+            board.en_passant.y = movedFrom.y + 1;  
+        }
+    }
 
+    generateFEN(); //for å lagre riktig en passant
+    board.FEN = FEN;
     history.push_back(forwardHistory.back());
     forwardHistory.pop_back();
 
     board.Move(movedFrom, movedTo);
-    totMoves += 1;
+    if(board.turn == 1){
+        totMoves += 1;
+    }
+    generateFEN(); //det brettet faktisk er nå
+    board.FEN = FEN;
 }
 
 
