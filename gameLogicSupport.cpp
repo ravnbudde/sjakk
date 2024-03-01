@@ -109,3 +109,65 @@ const string getBoardPosfromFEN(const string &FEN){
     }
     return "Didnt find move element in FEN";
 }
+
+const int getTurnfromFEN(const string &FEN){
+    int indexCount = 0;
+    const char whitespace = ' ';
+    string output = "";
+    for(int i = 0; i < FEN.length(); i++){
+        if(FEN[i] == whitespace){
+            indexCount += 1;
+            if(indexCount == 2){
+                if(output == "w"){
+                    return 1;
+                }
+                else if(output == "b"){
+                    return -1;
+                }
+            }
+            output = "";
+        }
+        else{
+            output += FEN[i];
+        }
+    }
+    return 0;
+}
+
+const int getHMfromFEN(const string &FEN){
+    int indexCount = 0;
+    const char whitespace = ' ';
+    string output = "";
+    for(int i = 0; i < FEN.length(); i++){
+        if(FEN[i] == whitespace){
+            indexCount += 1;
+            if(indexCount == 5){
+                int a = stoi(output);
+                return a;
+            }
+            output = "";
+        }
+        else{
+            output += FEN[i];
+        }
+    }
+    return -1;
+}
+
+const int getTMfromFEN(const string &FEN){
+    int indexCount = 0;
+    const char whitespace = ' ';
+    string output = "";
+    for(int i = 0; i < FEN.length(); i++){
+        if(FEN[i] == whitespace){
+            indexCount += 1;
+            output = "";
+        }
+        else{
+            output += FEN[i];
+        }
+    }
+    cout << FEN << endl;
+    return stoi(output);
+}
+

@@ -10,8 +10,8 @@ int main() {
     //cout << board.pieceAt(TDT4102::Point(0,3))->getPieceType()*board.pieceAt(TDT4102::Point(0,3))->side << endl;
 
 
-
-    Game game{};
+    //Får feilmelding om man bruker konstruksjonen uten string FEN
+    Game game{startFEN};
 
     game.board.generateMap();
 

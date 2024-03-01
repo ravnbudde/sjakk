@@ -4,7 +4,7 @@
 #include "Point.h"
 
 //vanlig startbrett FEN
-constexpr string_view newBoardFEN = "rhbqkbhr/pppppppp/8/8/8/8/PPPPPPPP/RHBQKBHR b KQkq - 0";
+constexpr string_view newBoardFEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 
 //Standard square brett, winH:winW = 8:10
 constexpr int winH = 800;
@@ -32,10 +32,10 @@ const map<char, int> PieceTypeToInt{
     {'q', -9},
     {'r', -5},
     {'b', -4},
-    {'h', -3},    
+    {'n', -3},    
     {'p', -1},
     {'P', 1}, 
-    {'H', 2}, 
+    {'N', 3}, 
     {'B', 4}, 
     {'R', 5}, 
     {'Q', 9}, 
@@ -45,13 +45,13 @@ const map<char, int> PieceTypeToInt{
 
 const map<int, char> IntToPieceType{
     {1,'P'}, 
-    {3,'H'}, 
+    {3,'N'}, 
     {4,'B'}, 
     {5,'R'}, 
     {9,'Q'}, 
     {10,'K'},
     {-1,'p'},
-    {-3,'h'},
+    {-3,'n'},
     {-4,'b'},
     {-5,'r'},
     {-9,'q'},
@@ -104,6 +104,9 @@ TDT4102::Point cordToPoint(const string &cord);
 const string getEPfromFEN(const string &FEN);
 const string getCastlefromFEN(const string &FEN);
 const string getBoardPosfromFEN(const string &FEN);
+const int getTurnfromFEN(const string &FEN);
+const int getHMfromFEN(const string &FEN);
+const int getTMfromFEN(const string &FEN);
 
 
 void print8x8arr(const int (&arr)[8][8]);

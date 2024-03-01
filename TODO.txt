@@ -1,9 +1,10 @@
 
-Om en side flytter en bonde to fram, men trekker tilbake trekket, kan de nå ta sin egen side med En-Passant !!
-fiksa den første men fjerner den ikke noten siden føler det egentlig burde vert lov. gir mening.
 
+Man kan ikke ta en_passant om bonden som blir tatt er brikken som setter deg i sjakk
 
-Finn ut hva som er greia med board.createBoardFromFEN
+Om man initialiserer spillet i en pos hvor en_passant bør være lov så er det ikke det
+-> standard fen sin ep er der man kan ta, jeg gjør om til der bonden er som skaper problemer. må fikses
+
 
 Fiks for castle king og queen side 
 Fiks history for castle

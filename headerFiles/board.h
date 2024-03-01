@@ -17,7 +17,7 @@ private:
 
 
 public:
-    Board();
+    Board(string FEN);
     ~Board();
     Piece* the_board[8][8];
     Piece* pieceAt(TDT4102::Point point);

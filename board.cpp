@@ -1,9 +1,15 @@
 #include "headerFiles/board.h"
 
-Board::Board(): en_passant{TDT4102::Point(NULL, NULL)}, turn{1} 
+Board::Board(string FEN): FEN{FEN}, en_passant{TDT4102::Point(NULL, NULL)}, turn{1} 
 {
-    BoardNewSetup();
-    //createBoardFromFEN(FEN);
+    //BoardNewSetup();
+    turn = getTurnfromFEN(FEN);
+    if(getEPfromFEN(FEN) != "-"){
+        en_passant = cordToPoint(getEPfromFEN(FEN));
+    }
+    createBoardFromFEN(FEN);
+    //cout << getEPfromFEN(FEN) << endl;
+    //cout << en_passant.x << ", " << en_passant.y << endl;
 }
 
 Board::~Board()
@@ -192,7 +198,7 @@ bool Board::isInCheck(int side, TDT4102::Point kingCord) const{
                 vector<TDT4102::Point> moves = tempPiece->getLegalMoves(map, TDT4102::Point(x,y));
                 for(const auto& cord : moves){
                     if(cord.x == kingCord.x and cord.y == kingCord.y){
-                        cout << "brikken som kan ta kongen da er: " << intToPieceType(tempPiece->getPieceType()) << " som kan flytte til: " << pointToCord(cord) << endl;
+                        //cout << "brikken som kan ta kongen da er: " << intToPieceType(tempPiece->getPieceType()) << " som kan flytte til: " << pointToCord(cord) << endl;
                         return true;
                     }
                 }
@@ -213,7 +219,7 @@ void Board::PlacePieceAt(const char piece, TDT4102::Point point){
     case 'P':
         the_board[point.x][point.y] = new Pawn(1);
         break;
-    case 'H':
+    case 'N':
         the_board[point.x][point.y] = new Horse(1);
         break;
     case 'B':
@@ -231,7 +237,7 @@ void Board::PlacePieceAt(const char piece, TDT4102::Point point){
     case 'p':
         the_board[point.x][point.y] = new Pawn(-1);
         break;
-    case 'h':
+    case 'n':
         the_board[point.x][point.y] = new Horse(-1);
         break;
     case 'b':
@@ -322,7 +328,6 @@ void Board::createBoardFromFEN(const string& FEN){
     int y = 0;
     
     const string posFEN = getBoardPosfromFEN(FEN);
-    cout << posFEN << endl;
     //Lager et helt tomt brett
     for(int i = 0; i < 8; i++){
         for(int j = 0; j < 8; j++){
@@ -338,7 +343,7 @@ void Board::createBoardFromFEN(const string& FEN){
             //cout << "made pawn in " << x << ", " <<  y << endl;
             x += 1;
             break;
-        case 'H':
+        case 'N':
             the_board[x][y] = new Horse(1);
             //cout << "made horse in " << x << ", " <<  y << endl;
             x += 1;
@@ -368,7 +373,7 @@ void Board::createBoardFromFEN(const string& FEN){
             //cout << "made black pawn in " << x << ", " <<  y << endl;
             x += 1;
             break;
-        case 'h':
+        case 'n':
             the_board[x][y] = new Horse(-1);
             //cout << "made black horse in " << x << ", " <<  y << endl;
             x += 1;
@@ -455,10 +460,7 @@ vector<TDT4102::Point> Board::filterLegalMoves(TDT4102::Point activeSquare) cons
     int color = the_board[activeSquare.x][activeSquare.y]->side;
     vector<TDT4102::Point>legalMoves;
 
-    Board tempBoard{};
-    tempBoard.FEN = FEN; // sjekket at denne FEN stemmer med hovedboard
-    tempBoard.createBoardFromFEN(FEN); //denne funker også
-    tempBoard.turn = turn;
+    Board tempBoard{FEN};
     
 
     //ser på brikken vi skal sjekke
@@ -499,7 +501,7 @@ vector<TDT4102::Point> Board::filterLegalMoves(TDT4102::Point activeSquare) cons
             tempBoard.Move(activeSquare, pseudoLegalMoves.at(i));
             TDT4102::Point kingCord = tempBoard.getKingCord(color);
             tempBoard.generateMap();
-            cout << "i sjakk etter trekket: " << pointToCord(pseudoLegalMoves.at(i)) << ": " << (tempBoard.isInCheck(color, kingCord)) << endl << endl;
+            //cout << "i sjakk etter trekket: " << pointToCord(pseudoLegalMoves.at(i)) << ": " << (tempBoard.isInCheck(color, kingCord)) << endl << endl;
                 
             if(!tempBoard.isInCheck(color, kingCord)){
                 legalMoves.push_back(pseudoLegalMoves.at(i));

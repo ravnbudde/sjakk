@@ -1,11 +1,15 @@
 #include "headerFiles/game.h"
 
-Game::Game(): gamestate{"active"}, board{Board{}}, win{SjakkWindow{}}
+Game::Game(): gamestate{"active"}, board{Board{FEN}}, win{SjakkWindow{}}
 {
     board.FEN = FEN;
 }
-
-
+Game::Game(string FEN): FEN{FEN}, gamestate{"active"}, board{Board{FEN}}, win{SjakkWindow{}}
+{
+    halfMoves = getHMfromFEN(FEN);
+    totMoves = getTMfromFEN(FEN);
+    board.FEN = FEN;
+}
 
 
 
@@ -149,6 +153,7 @@ void Game::generateFEN(){
     else{
         FEN += " -";
     }
+    //Halfmoves
     const auto& mt = history.back().moveType;
     if(mt == MoveType::CAPTURE or mt == MoveType::PAWNPUSH){
         FEN += " 0";
@@ -158,6 +163,11 @@ void Game::generateFEN(){
         halfMoves += 1;
         FEN += " " + to_string(halfMoves);
     }
+    //TotMove (nr)
+    if(board.turn == 1){
+        totMoves += 1;
+    }
+    FEN += " " + to_string(totMoves);
 }
 
 void Game::undoMove(){
@@ -182,6 +192,7 @@ void Game::undoMove(){
 
     forwardHistory.push_back(history.back());
     history.pop_back();
+    totMoves -= 1;
 }
 
 void Game::forwardMove(){
@@ -207,6 +218,7 @@ void Game::forwardMove(){
     forwardHistory.pop_back();
 
     board.Move(movedFrom, movedTo);
+    totMoves += 1;
 }
 
 
@@ -218,6 +230,8 @@ void Game::playGame(){
 
 
     bool prevMouseClick = false;
+
+    board.createBoardFromFEN(FEN);
 
     while(gamestate == "active" and !win.should_close()){
         //ting til å koble sammen win og board osv..

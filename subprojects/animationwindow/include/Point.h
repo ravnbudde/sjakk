@@ -9,6 +9,9 @@ namespace TDT4102 {
 	inline bool operator==(const TDT4102::Point& lhs, const TDT4102::Point& rhs){
     	return lhs.x == rhs.x and lhs.y == rhs.y;
 	}
+	inline bool operator!=(const TDT4102::Point& lhs, const TDT4102::Point& rhs){
+    	return lhs.x != rhs.x and lhs.y != rhs.y;
+	}
 	inline bool operator<(const TDT4102::Point& lhs, const TDT4102::Point& rhs){
 		if(lhs.y == rhs.y){
 			return lhs.x < rhs.x;
@@ -21,5 +24,4 @@ namespace TDT4102 {
 		}
 		return lhs.y > rhs.y;
 	}
-
 }

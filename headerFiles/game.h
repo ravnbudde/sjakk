@@ -23,6 +23,8 @@ private:
 
 public:
     Game();
+    Game(string FEN);
+    //Game(string FEN);
     Board board;
     SjakkWindow win;
     void playGame();
@@ -34,7 +36,8 @@ public:
 
 
     int halfMoves = 0;
-    string FEN  = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR b KQkq - 0";
+    int totMoves = 1;
+    string FEN  = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
     void generateFEN();
 
 };
