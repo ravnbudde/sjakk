@@ -129,7 +129,7 @@ const string getBoardPosfromFEN(const string &FEN){
     return "Didnt find move element in FEN";
 }
 
-const int getTurnfromFEN(const string &FEN){
+int getTurnfromFEN(const string &FEN){
     int indexCount = 0;
     const char whitespace = ' ';
     string output = "";
@@ -153,7 +153,7 @@ const int getTurnfromFEN(const string &FEN){
     return 0;
 }
 
-const int getHMfromFEN(const string &FEN){
+int getHMfromFEN(const string &FEN){
     int indexCount = 0;
     const char whitespace = ' ';
     string output = "";
@@ -173,7 +173,7 @@ const int getHMfromFEN(const string &FEN){
     return -1;
 }
 
-const int getTMfromFEN(const string &FEN){
+int getTMfromFEN(const string &FEN){
     int indexCount = 0;
     const char whitespace = ' ';
     string output = "";

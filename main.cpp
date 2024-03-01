@@ -11,8 +11,8 @@ int main() {
 
 
     //Får feilmelding om man bruker konstruksjonen uten string FEN
-    Game game{"2r5/3pk3/8/2P5/8/2K5/8/8 w - - 5 4"};
-  
+    Game game{"8/3k4/8/1Pp5/1K6/8/8/8 w - c6 0 2"};
+    //Game game{};
     game.board.generateMap();
 
     //cout << game.board.map[0][0] << endl;

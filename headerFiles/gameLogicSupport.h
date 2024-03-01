@@ -105,9 +105,10 @@ const string getEPfromFEN(const string &FEN);
 const string getCaptureEPfromFEN(const string &FEN);
 const string getCastlefromFEN(const string &FEN);
 const string getBoardPosfromFEN(const string &FEN);
-const int getTurnfromFEN(const string &FEN);
-const int getHMfromFEN(const string &FEN);
-const int getTMfromFEN(const string &FEN);
+int getTurnfromFEN(const string &FEN);
+int getHMfromFEN(const string &FEN);
+int getTMfromFEN(const string &FEN);
+
 
 
 void print8x8arr(const int (&arr)[8][8]);
