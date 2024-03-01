@@ -468,12 +468,27 @@ vector<TDT4102::Point> Board::filterLegalMoves(TDT4102::Point activeSquare) cons
     //om det ikke er en brikke return tom vektor
     if(piece == nullptr){return pseudoLegalMoves;}
 
-    //sjekker om en-passant er relevant
+    //sjekker om en-passant er relevant, og legger til i legalmoves om det er
+    //gjør det her i stedet for legalmoves tilfelle en_passant-capture setter deg ut av sjakk
     //cout << "er leter etter EP? " << checkEnPassant(activeSquare) << endl; 
     if(checkEnPassant(activeSquare)){
         //cout << "Er det en EP? " << TryToMove(activeSquare, GetEnPassant()) << endl;
+        bool triedToMove = false;
         if(TryToMove(activeSquare, GetEnPassant())){
-            pseudoLegalMoves.push_back(GetEnPassant());
+            triedToMove = true;
+        }
+        if(triedToMove){
+            TDT4102::Point capturedSquare = cordToPoint(getCaptureEPfromFEN(tempBoard.FEN));
+            delete tempBoard.the_board[capturedSquare.x][capturedSquare.y];
+            tempBoard.the_board[capturedSquare.x][capturedSquare.y] = nullptr;
+            tempBoard.Move(activeSquare, GetEnPassant());
+            //cout << tempBoard.the_board[2][3]->getPieceType() << endl;
+            TDT4102::Point kingCord = tempBoard.getKingCord(color); //her skjer det noe funny
+            if(!tempBoard.isInCheck(color, kingCord)){
+                legalMoves.push_back(GetEnPassant());
+            }
+            tempBoard.deleteAllPieces();
+            tempBoard.createBoardFromFEN(FEN);
         }
     }
 

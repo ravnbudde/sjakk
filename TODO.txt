@@ -1,10 +1,7 @@
 
 
-Man kan ikke ta en_passant om bonden som blir tatt er brikken som setter deg i sjakk
-
-Om man initialiserer spillet i en pos hvor en_passant bør være lov så er det ikke det
--> standard fen sin ep er der man kan ta, jeg gjør om til der bonden er som skaper problemer. må fikses
-
+Om man initialiserer med en annen string en startFEN kan kongene gå veldig random??
+starta etter jeg fiksa så en_passant funker om det tar bonden som har deg i sjakk tror jeg
 
 Fiks for castle king og queen side 
 Fiks history for castle
