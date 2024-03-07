@@ -36,7 +36,8 @@ public:
     bool checkEnPassant(TDT4102::Point activeSquare) const;
 
     string FEN = "";
-    bool checkCastle(const char castleType) const;
+    bool checkCastleSquares(const char castleType) const;
+    TDT4102::Point getCastleDestination(const char castleType) const;
     void moveCastle(char type);
 
 

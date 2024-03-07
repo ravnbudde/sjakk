@@ -17,3 +17,6 @@ FEN{FEN}, from{pointToCord(from)}, to{pointToCord(to)}, capturedPiece{capturedPi
     else{cout << "ble lagd en capture movetype som tar en " << capturedPiece << endl;}
 }
 
+MoveData::MoveData(string FEN, char castleType, MoveType moveType):
+FEN{FEN}, castleType{castleType}, moveType{moveType}
+{}

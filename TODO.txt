@@ -1,3 +1,7 @@
+Fiksa så man bare kan flytte kongen 2 om riktig type er i FEN
+og man ikke er/havner i / går gjennom sjakk
+Må fikse så om man gjør trekket lager man movetypen også history ogsån...
+
 Fiks for castle king og queen side 
 Fiks history for castle
 

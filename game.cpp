@@ -30,6 +30,7 @@ void Game::clearActiveSquare(){
 }
 
 void Game::generateFEN(){
+    const auto& mt = history.back().moveType;
     FEN = "";
     int noPieceCount = 0;
     //Går over alle brikkene
@@ -145,17 +146,30 @@ void Game::generateFEN(){
         FEN += " b";
     }
     //Fiks med castle her
-    FEN += " KQkq";
+    string oldCastles = getCastlefromFEN(history.back().FEN);
+    if(mt == MoveType::CASTLE){
+        string newCastles;
+        for(const char& type : oldCastles){
+            if(type != history.back().castleType){
+                newCastles += type;
+            }
+        }
+        FEN += " " + newCastles;
+    }
+    else{
+        FEN += " " + oldCastles;
+    }
+
     //En Passant
     if(board.GetEnPassant().y != NULL){
-        cout << pointToCord(board.GetEnPassant()) << endl;
+        //cout << pointToCord(board.GetEnPassant()) << endl;
         FEN += " " + pointToCord(board.GetEnPassant());
     }
     else{
         FEN += " -";
     }
     //Halfmoves
-    const auto& mt = history.back().moveType;
+    
     if(mt == MoveType::CAPTURE or mt == MoveType::PAWNPUSH){
         FEN += " 0";
         halfMoves = 0;

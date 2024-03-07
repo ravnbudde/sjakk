@@ -121,16 +121,16 @@ bool Board::TryToMove(TDT4102::Point from, TDT4102::Point to) const{
     }
         //Sjekker de forskjellige castlene
     if(the_board[from.x][from.y]->getPieceType() == 10){
-        if(checkCastle('K')){
+        if(checkCastleSquares('K')){
             legalMoves.push_back(cordToPoint("g1"));
         }
-        if(checkCastle('Q')){
+        if(checkCastleSquares('Q')){
             legalMoves.push_back(cordToPoint("c1"));
         }
-        if(checkCastle('k')){
+        if(checkCastleSquares('k')){
             legalMoves.push_back(cordToPoint("g8"));
         }
-        if(checkCastle('q')){
+        if(checkCastleSquares('q')){
             legalMoves.push_back(cordToPoint("c8"));
         }
     }
@@ -265,7 +265,7 @@ TDT4102::Point Board::GetEnPassant() const{
     return en_passant;
 }
 
-bool Board::checkCastle(const char castleType) const{
+bool Board::checkCastleSquares(const char castleType) const{
     //Sjekker at rutene er tomme
     bool isSpaceClear = false;
     switch (castleType)
@@ -303,7 +303,7 @@ bool Board::checkCastle(const char castleType) const{
         }
         break;
     default:
-        cout << "Gitt castleType var ikke KQkq (Board::checkCastle())" << endl;
+        cout << "Gitt castleType var ikke KQkq (Board::checkCastleSquares())" << endl;
         return false;
         
         break;
@@ -321,6 +321,29 @@ bool Board::checkCastle(const char castleType) const{
     }
     cout << "Castle i FEN hadde ikke - eller castletype? (board::checkCastle())" << endl;
     return false;
+}
+
+TDT4102::Point Board::getCastleDestination(const char castleType) const{
+    switch (castleType)
+    {
+    case 'K':
+        return TDT4102::Point(cordToPoint("g1"));
+        break;
+    case 'Q':
+        return TDT4102::Point(cordToPoint("c1"));
+        break;
+    case 'k':
+        return TDT4102::Point(cordToPoint("g8"));
+        break;
+    case 'q':
+        return TDT4102::Point(cordToPoint("c8"));
+        break;
+    
+    default:
+        cout << "Ukjent castletype?   (board::getCastleDestination)" << endl;
+        return TDT4102::Point(NULL, NULL);
+        break;
+    }
 }
 
 void Board::createBoardFromFEN(const string& FEN){
@@ -495,20 +518,37 @@ vector<TDT4102::Point> Board::filterLegalMoves(TDT4102::Point activeSquare) cons
     }
 
     //Sjekker de forskjellige castlene
-    if(the_board[activeSquare.x][activeSquare.y]->getPieceType() == 10){
-        if(checkCastle('K')){
-            pseudoLegalMoves.push_back(cordToPoint("g1"));
-        }
-        if(checkCastle('Q')){
-            pseudoLegalMoves.push_back(cordToPoint("c1"));
-        }
-        if(checkCastle('k')){
-            pseudoLegalMoves.push_back(cordToPoint("g8"));
-        }
-        if(checkCastle('q')){
-            pseudoLegalMoves.push_back(cordToPoint("c8"));
+    if(the_board[activeSquare.x][activeSquare.y]->getPieceType() == 10 and !isInCheck(color, activeSquare)){
+        for(const char& type : getCastlefromFEN(FEN)){
+            if(checkCastleSquares(type)){
+                TDT4102::Point castleDestination = getCastleDestination(type);
+                tempBoard.Move(activeSquare, castleDestination);
+                if(!tempBoard.isInCheck(color, castleDestination)){
+                    tempBoard.Move(castleDestination, activeSquare);
+                    if(type == 'K' or type == 'k'){
+                        TDT4102::Point middleSquare(castleDestination.x-1, castleDestination.y);
+                        tempBoard.Move(activeSquare, middleSquare);
+                        if(!tempBoard.isInCheck(color, middleSquare)){
+                            legalMoves.push_back(castleDestination);
+                        }
+                        tempBoard.Move(middleSquare, activeSquare);
+                    }
+                    else if(type == 'Q' or type == 'q'){
+                        TDT4102::Point middleSquare(castleDestination.x+1, castleDestination.y);
+                        tempBoard.Move(activeSquare, middleSquare);
+                        if(!tempBoard.isInCheck(color, middleSquare)){
+                            legalMoves.push_back(castleDestination);
+                        }
+                        tempBoard.Move(middleSquare, activeSquare);
+                    }
+                }
+                else{
+                    tempBoard.Move(castleDestination, activeSquare);
+                }
+            }
         }
     }
+    
 
 
     for(int i = 0; i < pseudoLegalMoves.size(); i++){

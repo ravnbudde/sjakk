@@ -6,11 +6,11 @@ const string startFEN(newBoardFEN);
 
 int main() {
 
-    //Game game{"r3k2r/pppppppp/8/8/8/8/PPPPPPPP/R3K2R w KQkq - 0 1"}; //castle setup
+    Game game{"r3k2r/pppppppp/8/8/8/8/PPPPPPPP/R3K2R w KQkq - 0 1"}; //castle setup
 
     //Game game{"4k3/2p5/8/1P6/8/1K6/8/8 b - - 0 1"}; //EnPassant setup
 
-    Game game{};
+    //Game game{};
 
     game.board.generateMap();
 
