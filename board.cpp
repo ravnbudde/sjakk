@@ -518,7 +518,7 @@ vector<TDT4102::Point> Board::filterLegalMoves(TDT4102::Point activeSquare) cons
     }
 
     //Sjekker de forskjellige castlene
-    if(the_board[activeSquare.x][activeSquare.y]->getPieceType() == 10 and !isInCheck(color, activeSquare)){
+    if(the_board[activeSquare.x][activeSquare.y]->getPieceType() == 10 and !isInCheck(color, activeSquare) and color == turn){
         //Går gjennom alle 'mulige' castle
         for(const char& type : getCastlefromFEN(FEN)){
             if(checkCastleSquares(type)){
