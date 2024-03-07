@@ -519,12 +519,15 @@ vector<TDT4102::Point> Board::filterLegalMoves(TDT4102::Point activeSquare) cons
 
     //Sjekker de forskjellige castlene
     if(the_board[activeSquare.x][activeSquare.y]->getPieceType() == 10 and !isInCheck(color, activeSquare)){
+        //Går gjennom alle 'mulige' castle
         for(const char& type : getCastlefromFEN(FEN)){
             if(checkCastleSquares(type)){
                 TDT4102::Point castleDestination = getCastleDestination(type);
                 tempBoard.Move(activeSquare, castleDestination);
+                //Hvis du ikke er i sjakk etter trekket
                 if(!tempBoard.isInCheck(color, castleDestination)){
                     tempBoard.Move(castleDestination, activeSquare);
+                    //Hvis du ikke går gjennom en sjakk
                     if(type == 'K' or type == 'k'){
                         TDT4102::Point middleSquare(castleDestination.x-1, castleDestination.y);
                         tempBoard.Move(activeSquare, middleSquare);
@@ -549,8 +552,7 @@ vector<TDT4102::Point> Board::filterLegalMoves(TDT4102::Point activeSquare) cons
         }
     }
     
-
-
+    //sjekker om du er i sjakk etter 'vanlige' trekk
     for(int i = 0; i < pseudoLegalMoves.size(); i++){
         tempBoard.generateMap();
         if(TryToMove(activeSquare,pseudoLegalMoves.at(i))){
@@ -568,7 +570,8 @@ vector<TDT4102::Point> Board::filterLegalMoves(TDT4102::Point activeSquare) cons
         }
     }
 
-    //tempboard slettes av seg selv når man går ut av funksjonen       
+    //tempboard slettes av seg selv når man går ut av funksjonen
+    tempBoard.deleteAllPieces();      
     return legalMoves;
 }
 
