@@ -304,7 +304,7 @@ void Game::playGame(){
         if(isHistory){win.drawUndo();}
         if(isForwardHistory){win.drawForward();}
 
-        //Sjekker om du trykker på en piece
+        //Sjekker om du trykker på noe
         if(currentMouseClick and !prevMouseClick){
             //Sjekker om undoMove
             if(isHistory and mouseCord.x > 7 and mouseCord.x < 9 and mouseCord.y > 1 and mouseCord.y < 3){
@@ -317,8 +317,8 @@ void Game::playGame(){
                 clearActiveSquare();
             }
             else if(mouseCord.x > 7 or mouseCord.y > 7){}
-            //Sjekker om man flyttet til et lovlig sted
 
+            //Sjekker om man flyttet til et lovlig sted
             else if(board.TryToMoveFiltered(activeSquare, mouseCord)){
                 //Legg til move i history
                 if(board.the_board[activeSquare.x][activeSquare.y]->getPieceType() == 1 and abs(mouseCord.x-activeSquare.x)==1 and board.GetEnPassant() == mouseCord){
@@ -327,27 +327,36 @@ void Game::playGame(){
                     TDT4102::Point capturedCord = cordToPoint(getCaptureEPfromFEN(FEN));
                     delete board.the_board[capturedCord.x][capturedCord.y];
                     board.the_board[capturedCord.x][capturedCord.y] = nullptr;
+                    board.Move(activeSquare, mouseCord);
                 }
                 else if(board.the_board[activeSquare.x][activeSquare.y]->getPieceType()== 1 and board.the_board[mouseCord.x][mouseCord.y] == nullptr){
                     MoveData theMove(FEN, activeSquare, mouseCord, MoveType::PAWNPUSH);
                     history.push_back(theMove);
+                    board.Move(activeSquare, mouseCord);
                 }
                 else if(board.the_board[mouseCord.x][mouseCord.y] != nullptr){
                     char capturePiece = intToPieceType(-1*board.turn*board.the_board[mouseCord.x][mouseCord.y]->getPieceType());
                     MoveData theMove(FEN, activeSquare, mouseCord, capturePiece, MoveType::CAPTURE);
                     history.push_back(theMove);
                     delete board.the_board[mouseCord.x][mouseCord.y]; 
+                    board.Move(activeSquare, mouseCord);
+                }
+                else if(board.the_board[activeSquare.x][activeSquare.y]->getPieceType() == 10 and abs(activeSquare.x - mouseCord.x) == 2){
+                    char castleType = getCastleType(mouseCord);
+                    MoveData theMove(FEN, activeSquare, castleType, MoveType::CASTLE);
+                    history.push_back(theMove);
+                    board.moveCastle(castleType);
                 }
                 else{
                     MoveData theMove(FEN, activeSquare, mouseCord, MoveType::NORMAL);
                     history.push_back(theMove);
+                    board.Move(activeSquare, mouseCord);
                 }
 
                 
                 //Sletter forwardhistory
                 forwardHistory.clear();
-                //Flytt brikken
-                board.Move(activeSquare, mouseCord);
+                
                 //Oppdater FEN-map
                 generateFEN();
                 board.FEN = FEN;

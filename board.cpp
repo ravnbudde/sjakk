@@ -190,6 +190,7 @@ TDT4102::Point Board::getKingCord(int side) const{
 
 bool Board::isInCheck(int side, TDT4102::Point kingCord) const{
 
+    
 
     for(int y = 0; y < 8; y++){
         for(int x = 0; x < 8; x++){
@@ -321,29 +322,6 @@ bool Board::checkCastleSquares(const char castleType) const{
     }
     cout << "Castle i FEN hadde ikke - eller castletype? (board::checkCastle())" << endl;
     return false;
-}
-
-TDT4102::Point Board::getCastleDestination(const char castleType) const{
-    switch (castleType)
-    {
-    case 'K':
-        return TDT4102::Point(cordToPoint("g1"));
-        break;
-    case 'Q':
-        return TDT4102::Point(cordToPoint("c1"));
-        break;
-    case 'k':
-        return TDT4102::Point(cordToPoint("g8"));
-        break;
-    case 'q':
-        return TDT4102::Point(cordToPoint("c8"));
-        break;
-    
-    default:
-        cout << "Ukjent castletype?   (board::getCastleDestination)" << endl;
-        return TDT4102::Point(NULL, NULL);
-        break;
-    }
 }
 
 void Board::createBoardFromFEN(const string& FEN){
@@ -521,7 +499,7 @@ vector<TDT4102::Point> Board::filterLegalMoves(TDT4102::Point activeSquare) cons
     if(the_board[activeSquare.x][activeSquare.y]->getPieceType() == 10 and !isInCheck(color, activeSquare) and color == turn){
         //Går gjennom alle 'mulige' castle
         for(const char& type : getCastlefromFEN(FEN)){
-            if(checkCastleSquares(type)){
+            if(tempBoard.checkCastleSquares(type)){
                 TDT4102::Point castleDestination = getCastleDestination(type);
                 tempBoard.Move(activeSquare, castleDestination);
                 //Hvis du ikke er i sjakk etter trekket
@@ -531,6 +509,8 @@ vector<TDT4102::Point> Board::filterLegalMoves(TDT4102::Point activeSquare) cons
                     if(type == 'K' or type == 'k'){
                         TDT4102::Point middleSquare(castleDestination.x-1, castleDestination.y);
                         tempBoard.Move(activeSquare, middleSquare);
+                        //Om tårner står ovenfor failer isincheck under, selvom tårnet ikke har deg i sjakk
+                        //isincheck under sier du er i sjakk da, men ikke over når den sjekker å gå 1 vanlig lenger ned i guess
                         if(!tempBoard.isInCheck(color, middleSquare)){
                             legalMoves.push_back(castleDestination);
                         }
@@ -592,21 +572,25 @@ void Board::moveCastle(char type){
     {
     case 'K':
         Move(cordToPoint("e1"), cordToPoint("g1"));
+        turn *= -1;
         Move(cordToPoint("h1"), cordToPoint("f1"));
         break;
 
     case 'Q':
         Move(cordToPoint("e1"), cordToPoint("c1"));
+        turn *= -1;
         Move(cordToPoint("a1"), cordToPoint("d1"));
         break;
 
     case 'k':
         Move(cordToPoint("e8"), cordToPoint("g8"));
+        turn *= -1;
         Move(cordToPoint("h8"), cordToPoint("f8"));
         break;
 
     case 'q':
         Move(cordToPoint("e8"), cordToPoint("c8"));
+        turn *= -1;
         Move(cordToPoint("a8"), cordToPoint("d8"));
         break;
     
@@ -616,6 +600,8 @@ void Board::moveCastle(char type){
     }
     return;
 }
+
+
 
 
 

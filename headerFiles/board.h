@@ -37,7 +37,6 @@ public:
 
     string FEN = "";
     bool checkCastleSquares(const char castleType) const;
-    TDT4102::Point getCastleDestination(const char castleType) const;
     void moveCastle(char type);
 
 

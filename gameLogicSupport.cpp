@@ -190,3 +190,64 @@ int getTMfromFEN(const string &FEN){
     return stoi(output);
 }
 
+TDT4102::Point getCastleDestination(const char castleType){
+    switch (castleType)
+    {
+    case 'K':
+        return TDT4102::Point(cordToPoint("g1"));
+        break;
+    case 'Q':
+        return TDT4102::Point(cordToPoint("c1"));
+        break;
+    case 'k':
+        return TDT4102::Point(cordToPoint("g8"));
+        break;
+    case 'q':
+        return TDT4102::Point(cordToPoint("c8"));
+        break;
+    
+    default:
+        cout << "Ukjent castletype?   (getCastleDestination)" << endl;
+        return TDT4102::Point(NULL, NULL);
+        break;
+    }
+}
+
+char getCastleType(TDT4102::Point to){
+    switch (to.y)
+    {
+    case 0:
+        switch (to.x)
+        {
+        case 2:
+            return 'q';
+            break;
+        case 6:
+            return 'k';
+            break;
+        default:
+            cout << "point.x er ikke en castletype    (getcastletype())" << endl;
+            break;
+        }
+        break;
+    case 7:
+        switch (to.x)
+        {
+        case 2:
+            return 'Q';
+            break;
+        case 6:
+            return 'K';
+            break;
+        default:
+            cout << "point.x er ikke en castletype    (getcastletype())" << endl;
+            break;
+        }
+        break;
+    
+    default:
+        cout << "point.y er ikke en castletype    (getcastletype())" << endl;
+        break;
+    }
+    return NULL;
+}

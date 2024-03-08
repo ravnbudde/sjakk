@@ -109,6 +109,7 @@ int getTurnfromFEN(const string &FEN);
 int getHMfromFEN(const string &FEN);
 int getTMfromFEN(const string &FEN);
 
-
+TDT4102::Point getCastleDestination(const char castleType);
+char getCastleType(TDT4102::Point to);
 
 void print8x8arr(const int (&arr)[8][8]);
