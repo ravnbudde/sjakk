@@ -199,7 +199,8 @@ bool Board::isInCheck(int side, TDT4102::Point kingCord) const{
                 vector<TDT4102::Point> moves = tempPiece->getLegalMoves(map, TDT4102::Point(x,y));
                 for(const auto& cord : moves){
                     if(cord.x == kingCord.x and cord.y == kingCord.y){
-                        //cout << "brikken som kan ta kongen da er: " << intToPieceType(tempPiece->getPieceType()) << " som kan flytte til: " << pointToCord(cord) << endl;
+                        // cout << "brikken som kan ta kongen da er: " << intToPieceType(tempPiece->getPieceType()) << " som kan flytte til: " << pointToCord(cord) << endl;
+                        // cout << "brikken er av side: " << tempPiece->side << endl;
                         return true;
                     }
                 }
@@ -462,6 +463,7 @@ vector<TDT4102::Point> Board::filterLegalMoves(TDT4102::Point activeSquare) cons
     vector<TDT4102::Point>legalMoves;
 
     Board tempBoard{FEN};
+    tempBoard.generateMap();
     
 
     //ser på brikken vi skal sjekke
@@ -499,34 +501,36 @@ vector<TDT4102::Point> Board::filterLegalMoves(TDT4102::Point activeSquare) cons
     if(the_board[activeSquare.x][activeSquare.y]->getPieceType() == 10 and !isInCheck(color, activeSquare) and color == turn){
         //Går gjennom alle 'mulige' castle
         for(const char& type : getCastlefromFEN(FEN)){
-            if(tempBoard.checkCastleSquares(type)){
-                TDT4102::Point castleDestination = getCastleDestination(type);
-                tempBoard.Move(activeSquare, castleDestination);
-                //Hvis du ikke er i sjakk etter trekket
-                if(!tempBoard.isInCheck(color, castleDestination)){
-                    tempBoard.Move(castleDestination, activeSquare);
-                    //Hvis du ikke går gjennom en sjakk
-                    if(type == 'K' or type == 'k'){
-                        TDT4102::Point middleSquare(castleDestination.x-1, castleDestination.y);
-                        tempBoard.Move(activeSquare, middleSquare);
-                        //Om tårner står ovenfor failer isincheck under, selvom tårnet ikke har deg i sjakk
-                        //isincheck under sier du er i sjakk da, men ikke over når den sjekker å gå 1 vanlig lenger ned i guess
-                        if(!tempBoard.isInCheck(color, middleSquare)){
-                            legalMoves.push_back(castleDestination);
+            if((turn == 1 and type < 100) or (turn == -1 and type > 100)){
+                if(tempBoard.checkCastleSquares(type)){
+                    TDT4102::Point castleDestination = getCastleDestination(type);
+                    tempBoard.Move(activeSquare, castleDestination);
+                    //Hvis du ikke er i sjakk etter trekket
+                    if(!tempBoard.isInCheck(color, castleDestination)){
+                        tempBoard.Move(castleDestination, activeSquare);
+                        //Hvis du ikke går gjennom en sjakk
+                        if(type == 'K' or type == 'k'){
+                            TDT4102::Point middleSquare(castleDestination.x-1, castleDestination.y);
+                            tempBoard.Move(activeSquare, middleSquare);
+                            //Om tårner står ovenfor failer isincheck under, selvom tårnet ikke har deg i sjakk
+                            //isincheck under sier du er i sjakk da, men ikke over når den sjekker å gå 1 vanlig lenger ned i guess
+                            if(!tempBoard.isInCheck(color, middleSquare)){
+                                legalMoves.push_back(castleDestination);
+                            }
+                            tempBoard.Move(middleSquare, activeSquare);
                         }
-                        tempBoard.Move(middleSquare, activeSquare);
-                    }
-                    else if(type == 'Q' or type == 'q'){
-                        TDT4102::Point middleSquare(castleDestination.x+1, castleDestination.y);
-                        tempBoard.Move(activeSquare, middleSquare);
-                        if(!tempBoard.isInCheck(color, middleSquare)){
-                            legalMoves.push_back(castleDestination);
+                        else if(type == 'Q' or type == 'q'){
+                            TDT4102::Point middleSquare(castleDestination.x+1, castleDestination.y);
+                            tempBoard.Move(activeSquare, middleSquare);
+                            if(!tempBoard.isInCheck(color, middleSquare)){
+                                legalMoves.push_back(castleDestination);
+                            }
+                            tempBoard.Move(middleSquare, activeSquare);
                         }
-                        tempBoard.Move(middleSquare, activeSquare);
                     }
-                }
-                else{
-                    tempBoard.Move(castleDestination, activeSquare);
+                    else{
+                        tempBoard.Move(castleDestination, activeSquare);
+                    }
                 }
             }
         }
@@ -571,27 +575,23 @@ void Board::moveCastle(char type){
     switch (type)
     {
     case 'K':
-        Move(cordToPoint("e1"), cordToPoint("g1"));
-        turn *= -1;
         Move(cordToPoint("h1"), cordToPoint("f1"));
+        turn *= -1;
         break;
 
     case 'Q':
-        Move(cordToPoint("e1"), cordToPoint("c1"));
-        turn *= -1;
         Move(cordToPoint("a1"), cordToPoint("d1"));
+        turn *= -1;
         break;
 
     case 'k':
-        Move(cordToPoint("e8"), cordToPoint("g8"));
-        turn *= -1;
         Move(cordToPoint("h8"), cordToPoint("f8"));
+        turn *= -1;
         break;
 
     case 'q':
-        Move(cordToPoint("e8"), cordToPoint("c8"));
-        turn *= -1;
         Move(cordToPoint("a8"), cordToPoint("d8"));
+        turn *= -1;
         break;
     
     default:
@@ -601,7 +601,35 @@ void Board::moveCastle(char type){
     return;
 }
 
+void Board::moveUndoCastle(char type){
+    switch (type)
+    {
+    case 'K':
+        Move(cordToPoint("f1"), cordToPoint("h1"));
+        turn *= -1;
+        break;
 
+    case 'Q':
+        Move(cordToPoint("d1"), cordToPoint("a1"));
+        turn *= -1;
+        break;
+
+    case 'k':
+        Move(cordToPoint("f8"), cordToPoint("h8"));
+        turn *= -1;
+        break;
+
+    case 'q':
+        Move(cordToPoint("d8"), cordToPoint("a8"));
+        turn *= -1;
+        break;
+    
+    default:
+    cout << "Invalid castle type (should be K||Q||k||q)" << endl;
+        break;
+    }
+    return;
+}
 
 
 

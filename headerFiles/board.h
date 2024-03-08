@@ -38,6 +38,7 @@ public:
     string FEN = "";
     bool checkCastleSquares(const char castleType) const;
     void moveCastle(char type);
+    void moveUndoCastle(char type);
 
 
     int map[8][8] = {
@@ -52,6 +53,6 @@ public:
     };
     void generateMap();//oppdaterer map
 
-
+char a='k';
     
 };

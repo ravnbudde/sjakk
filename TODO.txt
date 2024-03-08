@@ -1,14 +1,6 @@
-Fiksa så man bare kan flytte kongen 2 om riktig type er i FEN
-og man ikke er/havner i / går gjennom sjakk
-Må fikse så om man gjør trekket lager man movetypen også history ogsån...
+Fiks for promotion
+Fiks history for promotion
 
-Se linje512-513 i board.cpp
-
-
-Fiks for castle king og queen side 
-Fiks history for castle
-
-samme som over men for resten av movetypes
 
 
 

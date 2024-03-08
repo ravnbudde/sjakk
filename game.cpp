@@ -147,18 +147,57 @@ void Game::generateFEN(){
     }
     //Fiks med castle her
     string oldCastles = getCastlefromFEN(history.back().FEN);
+    string newCastles1;
     if(mt == MoveType::CASTLE){
-        string newCastles;
         for(const char& type : oldCastles){
             if(type != history.back().castleType){
-                newCastles += type;
+                newCastles1 += type;
             }
         }
-        FEN += " " + newCastles;
     }
     else{
-        FEN += " " + oldCastles;
+        newCastles1 = oldCastles;
     }
+    int pieceTypeLastMoved = board.the_board[cordToPoint(history.back().to).x][cordToPoint(history.back().to).y]->getPieceType();
+    string newCastles2 = "";
+    if(pieceTypeLastMoved == 10){
+        if(board.turn == -1){ //det vil si hvit konge siden trekket allerede er gjort
+            for(const char& type : oldCastles){
+                if(type > 100){ //det vil si k eller q
+                    newCastles2 += type;
+                }
+            }
+        }
+        else{//altså om det var sort konge som flytta
+            for(const char& type : oldCastles){
+                if(type < 100){ //det vil si K eller Q
+                    newCastles2 += type;
+                }
+            }
+        }
+    }
+    else{
+        newCastles2 += newCastles1;
+    }
+    string newCastles3 = " ";
+    if(pieceTypeLastMoved == 5 and board.the_board[cordToPoint(history.back().to).x][cordToPoint(history.back().to).y]->side != board.turn){
+        for(const char& type : oldCastles){
+            if(getCastleCorner(cordToPoint(history.back().from)) != NULL){
+                if(type != getCastleCorner(cordToPoint(history.back().from))){
+                    newCastles3 += type;
+                }
+            }
+        }
+    }
+    else{
+        newCastles3 += newCastles2;
+    }
+    if(newCastles3.length() == 1){
+        newCastles3 += "-";
+    }
+    FEN += newCastles3;
+
+
 
     //En Passant
     if(board.GetEnPassant().y != NULL){
@@ -200,6 +239,10 @@ void Game::undoMove(){
     else if(moveType == MoveType::ENPASSANT){
         capturedCord = cordToPoint(history.back().capturedPawnCord);
     }
+    else if(moveType == MoveType::CASTLE){  
+        char type = history.back().castleType;
+        board.moveUndoCastle(type);
+    }
 
     board.Move(movedTo, movedFrom);
     board.en_passant = TDT4102::Point(0,0);//hvis denne ikke er her er En-Passant mot seg selv lov
@@ -235,7 +278,10 @@ void Game::forwardMove(){
     else if(moveType == MoveType::ENPASSANT){
         capturedCord = cordToPoint(forwardHistory.back().capturedPawnCord);
     }
-
+    else if(moveType == MoveType::CASTLE){  
+        char type = forwardHistory.back().castleType;
+        board.moveCastle(type);
+    }
     if(moveType == MoveType::CAPTURE or moveType == MoveType::ENPASSANT){
         halfMoves = 0;
         delete board.the_board[capturedCord.x][capturedCord.y];
@@ -253,7 +299,9 @@ void Game::forwardMove(){
         }
     }
 
-    generateFEN(); //for å lagre riktig en passant
+    if(moveType == MoveType::ENPASSANT){
+        generateFEN(); //for å lagre riktig en passant
+    }
     board.FEN = FEN;
     history.push_back(forwardHistory.back());
     forwardHistory.pop_back();
@@ -327,19 +375,16 @@ void Game::playGame(){
                     TDT4102::Point capturedCord = cordToPoint(getCaptureEPfromFEN(FEN));
                     delete board.the_board[capturedCord.x][capturedCord.y];
                     board.the_board[capturedCord.x][capturedCord.y] = nullptr;
-                    board.Move(activeSquare, mouseCord);
                 }
                 else if(board.the_board[activeSquare.x][activeSquare.y]->getPieceType()== 1 and board.the_board[mouseCord.x][mouseCord.y] == nullptr){
                     MoveData theMove(FEN, activeSquare, mouseCord, MoveType::PAWNPUSH);
                     history.push_back(theMove);
-                    board.Move(activeSquare, mouseCord);
                 }
                 else if(board.the_board[mouseCord.x][mouseCord.y] != nullptr){
                     char capturePiece = intToPieceType(-1*board.turn*board.the_board[mouseCord.x][mouseCord.y]->getPieceType());
                     MoveData theMove(FEN, activeSquare, mouseCord, capturePiece, MoveType::CAPTURE);
                     history.push_back(theMove);
                     delete board.the_board[mouseCord.x][mouseCord.y]; 
-                    board.Move(activeSquare, mouseCord);
                 }
                 else if(board.the_board[activeSquare.x][activeSquare.y]->getPieceType() == 10 and abs(activeSquare.x - mouseCord.x) == 2){
                     char castleType = getCastleType(mouseCord);
@@ -350,13 +395,13 @@ void Game::playGame(){
                 else{
                     MoveData theMove(FEN, activeSquare, mouseCord, MoveType::NORMAL);
                     history.push_back(theMove);
-                    board.Move(activeSquare, mouseCord);
                 }
 
                 
                 //Sletter forwardhistory
                 forwardHistory.clear();
-                
+
+                board.Move(activeSquare, mouseCord);                
                 //Oppdater FEN-map
                 generateFEN();
                 board.FEN = FEN;

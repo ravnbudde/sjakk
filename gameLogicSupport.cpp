@@ -251,3 +251,42 @@ char getCastleType(TDT4102::Point to){
     }
     return NULL;
 }
+
+char getCastleCorner(TDT4102::Point from){
+    switch (from.y)
+    {
+    case 0:
+        switch (from.x)
+        {
+        case 0:
+            return 'q';
+            break;
+        case 7:
+            return 'k';
+            break;
+        
+        default:
+            break;
+        }
+        break;
+    case 7:
+        switch (from.x)
+        {
+        case 0:
+            return 'Q';
+            break;
+        case 7:
+            return 'K';
+            break;
+        
+        default:
+            break;
+        }
+        break;
+    
+    default:
+        break;
+    }
+    return NULL;
+}
+
