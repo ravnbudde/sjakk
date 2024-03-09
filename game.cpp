@@ -356,9 +356,24 @@ bool Game::checkForStaleMate(int turn) const{
 
 bool Game::checkForThreeMoveRepitition() const{
     vector<string> FENposes;
+    int repCount = 0;
     for(int i = 0; i < history.size(); i++){
-        FENposes.
+        FENposes.push_back(getBoardPosfromFEN(history.at(i).FEN));
     }
+    FENposes.push_back(getBoardPosfromFEN(FEN));
+    for(int i = 0; i < history.size(); i++){
+        string FENPos = FENposes.at(i);
+        for(const string& element : FENposes){
+            if(element == FENPos){
+                repCount += 1;
+                if(repCount == 3){
+                    return true;
+                }
+            }
+        }
+        repCount = 0;
+    }
+    return false;    
 }
 
 void Game::playGame2Player(){
