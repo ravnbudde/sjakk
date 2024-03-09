@@ -14,9 +14,9 @@ int main() {
 
     //Game game{"rnbqkbnr/p7/8/8/8/8/P7/RNBQKBNR w KQkq - 0 1"}; //movecount setup
 
-    Game game{"rr2k3/8/8/8/8/8/8/4K3 w - - 0 1"}; //Mate setup
+    //Game game{"rr2k3/8/8/8/8/8/8/4K3 w - - 0 1"}; //Mate setup
 
-    //Game game{};
+    Game game{};
 
     game.board.generateMap();
 

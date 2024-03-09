@@ -430,7 +430,7 @@ void Game::playGame2Player(){
             else if(board.TryToMoveFiltered(activeSquare, mouseCord) and gameOver == false){
                 //Legg til move i history
                 if(board.the_board[activeSquare.x][activeSquare.y]->getPieceType()== 1 and (mouseCord.y == 0 or mouseCord.y == 7)){
-                    char promotionType = 'q'; //Liten bokstav på denne
+                    char promotionType = 'q'; //Liten bokstav på denne, nå kan man kun promote til queen, må finne en lur måte å få q,r,b eller n som input, uten å bruke GUI? så når jeg lager en bot slipper jeg å faktisk lage en fysisk robot som må trykke på skjærmen
                     char captureType = NULL;
                     if(board.the_board[mouseCord.x][mouseCord.y] != nullptr){
                         captureType = intToPieceType(-1*board.turn*board.the_board[mouseCord.x][mouseCord.y]->getPieceType());

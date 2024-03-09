@@ -1,8 +1,10 @@
-Fikse for 3-move repitition(linje 357 i game.cpp)
+Finn en smart måte å få promotiontype som input (game.cpp linje 433)
 
-Finn en smart måte å få promotiontype som input (game.cpp linje 394)
+Lag en måte å sjekke antall mulige trekk i en viss depth fra en posisjon, så jeg kan konfirmere at alt funker som det skal
 
+(må kanskje lage playGame botVplayer og botVbot for at input av trekk skal fungere for bot uten at den må trykke på skjærmen?)
 
+lag stockfish2.0
 
 
 
