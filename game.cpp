@@ -391,7 +391,7 @@ void Game::playGame2Player(){
             else if(board.TryToMoveFiltered(activeSquare, mouseCord)){
                 //Legg til move i history
                 if(board.the_board[activeSquare.x][activeSquare.y]->getPieceType()== 1 and mouseCord.y == 0 or mouseCord.y == 7){
-                    char promotionType = 'q';
+                    char promotionType = 'q'; //Liten bokstav på denne
                     char captureType = NULL;
                     if(board.the_board[mouseCord.x][mouseCord.y] != nullptr){
                         captureType = intToPieceType(-1*board.turn*board.the_board[mouseCord.x][mouseCord.y]->getPieceType());
@@ -402,9 +402,7 @@ void Game::playGame2Player(){
                     MoveData theMove(FEN, activeSquare, mouseCord, promotionType, captureType, MoveType::PROMOTION);
                     // cout << static_cast<std::underlying_type<MoveType>::type>(theMove.promotionType) << endl;
                     history.push_back(theMove);
-                    delete board.the_board[activeSquare.x][activeSquare.y];
-                    board.the_board[activeSquare.x][activeSquare.y] = new Queen(board.turn);
-                }
+                    board.forwardPromotion(promotionType, activeSquare);}
                 else if(board.the_board[activeSquare.x][activeSquare.y]->getPieceType() == 1 and abs(mouseCord.x-activeSquare.x)==1 and board.GetEnPassant() == mouseCord){
                     MoveData theMove(FEN, activeSquare, mouseCord, intToPieceType(-board.turn), MoveType::ENPASSANT);
                     history.push_back(theMove);

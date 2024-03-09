@@ -659,7 +659,7 @@ void Board::forwardPromotion(char type, TDT4102::Point from){
         the_board[from.x][from.y] = new Horse(turn);
         break;
     default:
-    cout << "Invalid promotion type (should be q||r||b||n||Q||R||B||N)" << endl;
+    cout << "Invalid promotion type (should be q||r||b||n" << endl;
         break;
     }
     return;

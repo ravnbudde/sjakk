@@ -1,7 +1,7 @@
 Fiks for promotion
 Fiks history for promotion
 
-Finn en smart måte å få promotiontype som input (game.cpp linje 380)
+Finn en smart måte å få promotiontype som input (game.cpp linje 394)
 
 
 

@@ -10,7 +10,7 @@ int main() {
 
     //Game game{"4k3/2p5/8/1P6/8/1K6/8/8 b - - 0 1"}; //EnPassant setup
 
-    Game game{"r3k3/1P6/8/8/8/8/8/K7 w q - 0 1"}; //Promotion setup
+    Game game{"r3k3/1P6/8/8/8/8/3p4/K7 w q - 0 1"}; //Promotion setup
 
     //Game game{};
 
