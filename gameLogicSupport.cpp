@@ -186,7 +186,6 @@ int getTMfromFEN(const string &FEN){
             output += FEN[i];
         }
     }
-    cout << FEN << endl;
     return stoi(output);
 }
 

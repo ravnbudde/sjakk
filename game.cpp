@@ -209,7 +209,7 @@ void Game::generateFEN(){
     }
     //Halfmoves
     
-    if(mt == MoveType::CAPTURE or mt == MoveType::PAWNPUSH){
+    if(mt == MoveType::CAPTURE or mt == MoveType::PAWNPUSH or mt == MoveType::PROMOTION){
         FEN += " 0";
         halfMoves = 0;
     }
@@ -231,8 +231,9 @@ void Game::undoMove(){
     MoveType moveType = history.back().moveType;
     TDT4102::Point capturedCord;
     if(history.size() > 1){
-        halfMoves = getHMfromFEN(history.at(history.size()-2).FEN);
+        halfMoves = getHMfromFEN(history.back().FEN);
     }
+    totMoves = getTMfromFEN(history.back().FEN);
     // cout << static_cast<std::underlying_type<MoveType>::type>(moveType) << endl;
     // cout << history.back().from << "->" << history.back().to << endl; 
     if(moveType == MoveType::CAPTURE){
@@ -272,9 +273,6 @@ void Game::undoMove(){
     board.FEN = FEN;
     forwardHistory.push_back(history.back());
     history.pop_back();
-    if(board.turn == 1){
-        totMoves += 1;
-    }
 }
 
 void Game::forwardMove(){
@@ -283,7 +281,8 @@ void Game::forwardMove(){
     MoveType moveType = forwardHistory.back().moveType;
     TDT4102::Point capturedCord; 
 
-    halfMoves += 1;   
+    halfMoves = getHMfromFEN(forwardHistory.back().FEN); 
+    totMoves = getTMfromFEN(forwardHistory.back().FEN); 
 
     if(moveType == MoveType::CAPTURE){
         capturedCord = movedTo; 
@@ -328,9 +327,6 @@ void Game::forwardMove(){
     forwardHistory.pop_back();
 
     board.Move(movedFrom, movedTo);
-    if(board.turn == 1){
-        totMoves += 1;
-    }
     generateFEN(); //det brettet faktisk er nå
     board.FEN = FEN;
 }

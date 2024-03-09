@@ -3,7 +3,9 @@ Fiks history for promotion
 
 Finn en smart måte å få promotiontype som input (game.cpp linje 394)
 
+Fikse så halfmove og totmove funker
 
+legge til når noen vinner/draw
 
 
 
