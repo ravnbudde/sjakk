@@ -40,6 +40,8 @@ public:
     void moveCastle(char type);
     void moveUndoCastle(char type);
 
+    void forwardPromotion(char type, TDT4102::Point from);
+
 
     int map[8][8] = {
         {0,0,0,0,0,0,0,0},
@@ -52,7 +54,5 @@ public:
         {0,0,0,0,0,0,0,0}
     };
     void generateMap();//oppdaterer map
-
-char a='k';
     
 };

@@ -233,6 +233,8 @@ void Game::undoMove(){
     if(history.size() > 1){
         halfMoves = getHMfromFEN(history.at(history.size()-2).FEN);
     }
+    // cout << static_cast<std::underlying_type<MoveType>::type>(moveType) << endl;
+    // cout << history.back().from << "->" << history.back().to << endl; 
     if(moveType == MoveType::CAPTURE){
         capturedCord = movedTo; 
     }
@@ -243,12 +245,23 @@ void Game::undoMove(){
         char type = history.back().castleType;
         board.moveUndoCastle(type);
     }
+    else if(moveType == MoveType::PROMOTION){
+        delete board.the_board[movedTo.x][movedTo.y];
+        board.the_board[movedTo.x][movedTo.y] = new Pawn(getTurnfromFEN(history.back().FEN));
+    }
 
     board.Move(movedTo, movedFrom);
     board.en_passant = TDT4102::Point(0,0);//hvis denne ikke er her er En-Passant mot seg selv lov
 
     if(moveType == MoveType::CAPTURE or moveType == MoveType::ENPASSANT){
         board.PlacePieceAt(capturedPiece, capturedCord); 
+        
+    }
+    else if(moveType == MoveType::PROMOTION){
+        if(capturedPiece != NULL){
+            cout << pointToCord(movedTo) << endl;
+            board.PlacePieceAt(capturedPiece, movedTo);
+        }
     }
     if(moveType == MoveType::ENPASSANT){
         board.en_passant = cordToPoint(getEPfromFEN(history.back().FEN));
@@ -281,6 +294,14 @@ void Game::forwardMove(){
     else if(moveType == MoveType::CASTLE){  
         char type = forwardHistory.back().castleType;
         board.moveCastle(type);
+    }
+    else if(moveType == MoveType::PROMOTION){
+        char type = forwardHistory.back().promotionType;
+        board.forwardPromotion(type, movedFrom);
+        if(board.the_board[movedTo.x][movedTo.y] != nullptr){
+            delete board.the_board[movedTo.x][movedTo.y];
+            board.the_board[movedTo.x][movedTo.y] = nullptr;
+        }
     }
     if(moveType == MoveType::CAPTURE or moveType == MoveType::ENPASSANT){
         halfMoves = 0;
@@ -316,7 +337,7 @@ void Game::forwardMove(){
 
 
 
-void Game::playGame(){
+void Game::playGame2Player(){
     //selve spillet
     activeSquare = TDT4102::Point(8,8);
     moveTo = TDT4102::Point(8,8);
@@ -369,7 +390,22 @@ void Game::playGame(){
             //Sjekker om man flyttet til et lovlig sted
             else if(board.TryToMoveFiltered(activeSquare, mouseCord)){
                 //Legg til move i history
-                if(board.the_board[activeSquare.x][activeSquare.y]->getPieceType() == 1 and abs(mouseCord.x-activeSquare.x)==1 and board.GetEnPassant() == mouseCord){
+                if(board.the_board[activeSquare.x][activeSquare.y]->getPieceType()== 1 and mouseCord.y == 0 or mouseCord.y == 7){
+                    char promotionType = 'q';
+                    char captureType = NULL;
+                    if(board.the_board[mouseCord.x][mouseCord.y] != nullptr){
+                        captureType = intToPieceType(-1*board.turn*board.the_board[mouseCord.x][mouseCord.y]->getPieceType());
+                    }
+                    if(board.turn == 1){
+                        promotionType -= 32;
+                    }
+                    MoveData theMove(FEN, activeSquare, mouseCord, promotionType, captureType, MoveType::PROMOTION);
+                    // cout << static_cast<std::underlying_type<MoveType>::type>(theMove.promotionType) << endl;
+                    history.push_back(theMove);
+                    delete board.the_board[activeSquare.x][activeSquare.y];
+                    board.the_board[activeSquare.x][activeSquare.y] = new Queen(board.turn);
+                }
+                else if(board.the_board[activeSquare.x][activeSquare.y]->getPieceType() == 1 and abs(mouseCord.x-activeSquare.x)==1 and board.GetEnPassant() == mouseCord){
                     MoveData theMove(FEN, activeSquare, mouseCord, intToPieceType(-board.turn), MoveType::ENPASSANT);
                     history.push_back(theMove);
                     TDT4102::Point capturedCord = cordToPoint(getCaptureEPfromFEN(FEN));

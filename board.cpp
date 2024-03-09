@@ -632,5 +632,36 @@ void Board::moveUndoCastle(char type){
 }
 
 
+void Board::forwardPromotion(char type, TDT4102::Point from){
+    char lowerType = type;
+    if(lowerType < 100 and turn == 1){
+        lowerType += 32;
+    }
+    switch (lowerType)
+    {
+    case 'q':
+        delete the_board[from.x][from.y];
+        the_board[from.x][from.y] = new Queen(turn);
+        break;
 
+    case 'r':
+        delete the_board[from.x][from.y];
+        the_board[from.x][from.y] = new Rook(turn);
+        break;
+
+    case 'b':
+        delete the_board[from.x][from.y];
+        the_board[from.x][from.y] = new Bishop(turn);
+        break;
+
+    case 'n':
+        delete the_board[from.x][from.y];
+        the_board[from.x][from.y] = new Horse(turn);
+        break;
+    default:
+    cout << "Invalid promotion type (should be q||r||b||n||Q||R||B||N)" << endl;
+        break;
+    }
+    return;
+}
 

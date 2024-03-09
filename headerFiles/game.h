@@ -29,7 +29,7 @@ public:
     //Game(string FEN);
     Board board;
     SjakkWindow win;
-    void playGame();
+    void playGame2Player();
     void updateTimes();
 
     TDT4102::Point activeSquare;
