@@ -8,6 +8,7 @@
 class Game {
 private:
     string gamestate;
+    bool gameOver = false;
     //Tid i ms, 5 min, 5 sek ekstra hvit
     int whiteTime = 305000;
     int blackTime = 300000;
@@ -26,6 +27,7 @@ public:
     Game(string FEN);
     string FEN  = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
    
+
     //Game(string FEN);
     Board board;
     SjakkWindow win;
@@ -40,6 +42,10 @@ public:
     int halfMoves = 0;
     int totMoves = 1;
     void generateFEN();
+
+    bool checkForMate(int turn) const;
+    bool checkForStaleMate(int turn) const;
+    bool checkForThreeMoveRepitition() const;
 
 };
 

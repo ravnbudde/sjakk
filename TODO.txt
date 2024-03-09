@@ -1,11 +1,9 @@
-Fiks for promotion
-Fiks history for promotion
+Fikse for 3-move repitition(linje 357 i game.cpp)
 
 Finn en smart måte å få promotiontype som input (game.cpp linje 394)
 
-Fikse så halfmove og totmove funker
 
-legge til når noen vinner/draw
+
 
 
 

@@ -305,7 +305,7 @@ bool Board::checkCastleSquares(const char castleType) const{
         }
         break;
     default:
-        cout << "Gitt castleType var ikke KQkq (Board::checkCastleSquares())" << endl;
+        //cout << "Gitt castleType var ikke KQkq (Board::checkCastleSquares())" << endl;
         return false;
         
         break;
@@ -321,7 +321,7 @@ bool Board::checkCastleSquares(const char castleType) const{
             return true;
         }
     }
-    cout << "Castle i FEN hadde ikke - eller castletype? (board::checkCastle())" << endl;
+    //cout << "Castle i FEN hadde ikke - eller castletype? (board::checkCastleSquares())" << endl;
     return false;
 }
 

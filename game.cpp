@@ -331,7 +331,35 @@ void Game::forwardMove(){
     board.FEN = FEN;
 }
 
+bool Game::checkForMate(int turn) const{
+    TDT4102::Point kingPos = board.getKingCord(turn);
+    if(board.filterLegalMoves(kingPos).size() == 0 and board.isInCheck(turn, board.getKingCord(turn))){
+        return true;
+    }
+    return false;
+}
 
+bool Game::checkForStaleMate(int turn) const{
+    for(int y = 0; y < 8; y++){
+        for(int x = 0; x < 8; x++){
+            if(board.the_board[x][y] != nullptr){    
+                if(board.the_board[x][y]->side == turn){
+                    if(board.filterLegalMoves(TDT4102::Point(x,y)).size() != 0){
+                        return false;
+                    } 
+                }
+            }
+        }
+    }
+    return true;
+}
+
+bool Game::checkForThreeMoveRepitition() const{
+    vector<string> FENposes;
+    for(int i = 0; i < history.size(); i++){
+        FENposes.
+    }
+}
 
 void Game::playGame2Player(){
     //selve spillet
@@ -384,9 +412,9 @@ void Game::playGame2Player(){
             else if(mouseCord.x > 7 or mouseCord.y > 7){}
 
             //Sjekker om man flyttet til et lovlig sted
-            else if(board.TryToMoveFiltered(activeSquare, mouseCord)){
+            else if(board.TryToMoveFiltered(activeSquare, mouseCord) and gameOver == false){
                 //Legg til move i history
-                if(board.the_board[activeSquare.x][activeSquare.y]->getPieceType()== 1 and mouseCord.y == 0 or mouseCord.y == 7){
+                if(board.the_board[activeSquare.x][activeSquare.y]->getPieceType()== 1 and (mouseCord.y == 0 or mouseCord.y == 7)){
                     char promotionType = 'q'; //Liten bokstav på denne
                     char captureType = NULL;
                     if(board.the_board[mouseCord.x][mouseCord.y] != nullptr){
@@ -439,6 +467,32 @@ void Game::playGame2Player(){
                 //Stopp å vise lovlige trekk osv
                 moveTo = mouseCord;
                 clearActiveSquare();
+
+
+
+                if(checkForMate(board.turn) or checkForStaleMate(board.turn) or getHMfromFEN(FEN) >= 100 or checkForThreeMoveRepitition()){
+                    gameOver = true;
+                }
+                if(gameOver){
+                    if(checkForMate(1)){
+                        cout << "Checkmate! Black won!" << endl;
+                    }
+                    else if(checkForMate(-1)){
+                        cout << "Checkmate! White won!" << endl;
+                    }
+                    else if(checkForStaleMate(board.turn)){
+                        cout << "Stalemate! Its a draw!" << endl;
+                    }
+                    else if(getHMfromFEN(FEN) >= 100){
+                        cout << "50 move rule! Its a draw!" << endl;
+                    }
+                    else if(checkForThreeMoveRepitition()){
+                        cout << "Three move repitition! Its a draw!" << endl;
+                    }
+                }
+
+
+
             }
             else if(board.the_board[mouseCord.x][mouseCord.y] == nullptr){clearActiveSquare();}
             else{
@@ -448,11 +502,16 @@ void Game::playGame2Player(){
                 legalMoves = board.filterLegalMoves(activeSquare);
             }
             
+            
         }
         prevMouseClick = currentMouseClick;
 
 
 
+        
+
+
+        
 
         updateTimes();
         win.next_frame();

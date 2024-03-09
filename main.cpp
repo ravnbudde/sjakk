@@ -12,7 +12,9 @@ int main() {
 
     //Game game{"r3k3/1P6/8/8/8/8/3p4/K7 w q - 0 1"}; //Promotion setup
 
-    Game game{"rnbqkbnr/p7/8/8/8/8/P7/RNBQKBNR w KQkq - 0 1"}; //movecount setup
+    //Game game{"rnbqkbnr/p7/8/8/8/8/P7/RNBQKBNR w KQkq - 0 1"}; //movecount setup
+
+    Game game{"rr2k3/8/8/8/8/8/8/4K3 w - - 0 1"}; //Mate setup
 
     //Game game{};
 
