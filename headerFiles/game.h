@@ -47,6 +47,11 @@ public:
     bool checkForStaleMate(int turn) const;
     bool checkForThreeMoveRepitition() const;
 
+
+
+    //Til API?
+    vector<TDT4102::Point> getLegalMoves(TDT4102::Point from) const;
+
 };
 
 

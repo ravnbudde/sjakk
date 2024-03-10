@@ -375,3 +375,9 @@ bool Game::checkForThreeMoveRepitition() const{
 }
 
 
+vector<TDT4102::Point> Game::getLegalMoves(TDT4102::Point from) const{
+    return board.filterLegalMoves(from);
+}
+
+
+

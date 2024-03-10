@@ -1,3 +1,5 @@
+Det blir matt nå om kongen er i sjakk og ikke kan flytte, selvom man kan blokkere sjakken osv...
+
 Finn en smart måte å få promotiontype som input (game.cpp linje 433)
 
 Lag en måte å sjekke antall mulige trekk i en viss depth fra en posisjon, så jeg kan konfirmere at alt funker som det skal
