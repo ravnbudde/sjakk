@@ -28,10 +28,10 @@ public:
     string FEN  = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
    
 
-    //Game(string FEN);
     Board board;
     SjakkWindow win;
     void playGame2Player();
+    void playGameBotVBot();
     void updateTimes();
 
     TDT4102::Point activeSquare;

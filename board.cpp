@@ -625,7 +625,7 @@ void Board::moveUndoCastle(char type){
         break;
     
     default:
-    cout << "Invalid castle type (should be K||Q||k||q)" << endl;
+    //cout << "Invalid castle type (should be K||Q||k||q)" << endl;
         break;
     }
     return;

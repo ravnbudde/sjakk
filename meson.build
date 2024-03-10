@@ -39,6 +39,7 @@ exe = executable(
 'moveData.cpp',
 'pawn.cpp',
 'pieces.cpp',
+'playGame2Player.cpp',
 'queen.cpp',
 'rook.cpp',
 'window.cpp',

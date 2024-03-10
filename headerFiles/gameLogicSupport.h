@@ -114,3 +114,7 @@ char getCastleType(TDT4102::Point to);
 char getCastleCorner(TDT4102::Point from);
 
 void print8x8arr(const int (&arr)[8][8]);
+
+
+
+

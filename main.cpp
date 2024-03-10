@@ -20,7 +20,6 @@ int main() {
 
     game.board.generateMap();
 
-    //cout << game.board.map[0][0] << endl;
     
     game.playGame2Player();
 
